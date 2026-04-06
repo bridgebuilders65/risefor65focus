@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>#RiseFor65 — The Focus Wall</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --midnight: #18213e;
+      --deep: #1e2e55;
+      --mid: #1c2848;
+      --text: #e8f4ff;
+      --muted: rgba(210,232,255,0.62);
+      --faint: rgba(180,215,255,0.18);
+      --card: rgba(255,255,255,0.065);
+      --border: rgba(180,215,255,0.16);
+      --radius: 16px;
+    }
+
+    body {
+      background:
+        radial-gradient(ellipse at 20% 30%, rgba(200,230,255,0.14) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 15%, rgba(185,210,255,0.10) 0%, transparent 50%),
+        linear-gradient(160deg, var(--midnight) 0%, var(--deep) 40%, var(--mid) 70%, var(--midnight) 100%);
+      color: var(--text);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      min-height: 100vh;
+      padding: 20px 16px 48px;
+    }
+
+    .wrap { max-width: 680px; margin: 0 auto; }
+
+    /* ── Top bar ── */
+    .top-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 28px;
+    }
+    .badge {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 11px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase;
+      color: rgba(220,238,255,0.85);
+    }
+    .tag { font-size: 12px; color: rgba(200,225,255,0.38); }
+
+    /* ── Hero copy ── */
+    .hero { text-align: center; padding: 0 8px 32px; }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-weight: 500;
+      font-size: clamp(32px, 6vw, 52px);
+      line-height: 1.05;
+      color: #eef7ff;
+      letter-spacing: -0.5px;
+    }
+    .hero-sub {
+      margin-top: 12px;
+      font-size: clamp(13px, 2.2vw, 15px);
+      line-height: 1.6;
+      color: var(--muted);
+      max-width: 500px;
+      margin-left: auto; margin-right: auto;
+    }
+    .hero-rule {
+      width: 40px; height: 1px;
+      background: rgba(180,215,255,0.25);
+      margin: 20px auto 0;
+    }
+
+    /* ── Submit card ── */
+    .submit-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    .submit-label {
+      font-size: 13px; font-weight: 600; letter-spacing: 0.5px;
+      color: rgba(210,235,255,0.60);
+      text-transform: uppercase; letter-spacing: 1.2px;
+      margin-bottom: 12px;
+    }
+    .input-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .prefix-wrap { position: relative; flex: 1 1 280px; }
+    .prefix-label {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      font-size: 14px; color: rgba(200,225,255,0.45);
+      pointer-events: none; white-space: nowrap;
+    }
+    .entry-input {
+      width: 100%;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(180,215,255,0.22);
+      border-radius: 12px;
+      padding: 13px 14px 13px 192px;
+      font-size: 15px; font-family: 'DM Sans', sans-serif;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .entry-input::placeholder { color: rgba(200,225,255,0.28); }
+    .entry-input:focus { border-color: rgba(180,215,255,0.45); }
+    .submit-btn {
+      background: rgba(160,205,255,0.14);
+      border: 1px solid rgba(180,215,255,0.30);
+      border-radius: 12px;
+      padding: 13px 22px;
+      font-size: 14px; font-weight: 600;
+      color: rgba(220,240,255,0.92);
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: background 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+    .submit-btn:hover { background: rgba(160,205,255,0.24); border-color: rgba(180,215,255,0.50); }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .helper-text {
+      margin-top: 10px;
+      font-size: 13px;
+      color: rgba(200,225,255,0.48);
+      line-height: 1.5;
+    }
+    .status-msg {
+      margin-top: 8px;
+      min-height: 18px;
+      font-size: 13px;
+      color: rgba(200,225,255,0.65);
+    }
+
+    /* ── Wall ── */
+    .wall-header {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 14px; flex-wrap: wrap; gap: 8px;
+    }
+    .wall-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-weight: 500;
+      font-size: clamp(18px, 3vw, 24px);
+      color: rgba(220,240,255,0.90);
+    }
+    .wall-count {
+      font-size: 12px;
+      color: rgba(200,225,255,0.45);
+    }
+
+    .entries { display: grid; gap: 10px; }
+
+    .entry {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+      transition: border-color 0.3s;
+    }
+    .entry:hover { border-color: rgba(180,215,255,0.28); }
+    .entry-body { flex: 1; min-width: 0; }
+    .entry-prefix {
+      font-size: 11px; color: rgba(190,220,255,0.40);
+      text-transform: uppercase; letter-spacing: 1px;
+      margin-bottom: 3px;
+    }
+    .entry-text {
+      font-size: 16px; font-weight: 500;
+      color: rgba(225,242,255,0.90);
+      word-break: break-word;
+      line-height: 1.35;
+    }
+    .entry-meta {
+      margin-top: 5px;
+      font-size: 12px; color: rgba(190,220,255,0.42);
+    }
+    .like-btn {
+      flex: 0 0 auto;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(180,215,255,0.20);
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 13px; font-weight: 600;
+      color: rgba(210,235,255,0.75);
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+      white-space: nowrap;
+    }
+    .like-btn:hover:not(:disabled) {
+      background: rgba(160,205,255,0.16);
+      border-color: rgba(180,215,255,0.40);
+      color: rgba(220,242,255,0.95);
+    }
+    .like-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .like-btn.liked {
+      background: rgba(160,205,255,0.14);
+      border-color: rgba(180,215,255,0.38);
+      color: rgba(210,240,255,0.88);
+    }
+
+    .empty-state {
+      background: var(--card);
+      border: 1px dashed rgba(180,215,255,0.18);
+      border-radius: var(--radius);
+      padding: 28px;
+      text-align: center;
+      color: rgba(200,225,255,0.45);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 500px) {
+      .entry-input { padding-left: 148px; }
+      .prefix-label { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top-bar">
+    <div class="badge">✦ One thing at a time</div>
+    <div class="tag">#RiseFor65</div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-title">What will you<br>do with one focus?</div>
+    <div class="hero-sub">Unitasking — giving one thing your full, undivided attention — is one of the most peaceful habits you can build. What's one activity you'd like to bring your whole self to?</div>
+    <div class="hero-rule"></div>
+  </div>
+
+  <div class="submit-card">
+    <div class="submit-label">Share yours</div>
+    <div class="input-row">
+      <div class="prefix-wrap">
+        <span class="prefix-label">I will unitask on</span>
+        <input class="entry-input" id="entryInput" type="text" maxlength="100"
+          placeholder="reading, cooking, a walk…" autocomplete="off" />
+      </div>
+      <button class="submit-btn" id="submitBtn">Post</button>
+    </div>
+    <div class="helper-text">Type what you'd like to give your full attention to, then press Post. If someone else said it first, give them a +1.</div>
+    <div class="status-msg" id="status"></div>
+  </div>
+
+  <div class="wall-header">
+    <div class="wall-title">What everyone is unitasking on</div>
+    <div class="wall-count" id="countText">Loading…</div>
+  </div>
+
+  <div class="entries" id="entries"></div>
+
+</div>
+<script>
+  const POLL_ID   = 'risefor65-focus-wall-v1';
+  const API_URL   = `/api/focus-wall?poll=${encodeURIComponent(POLL_ID)}`;
+  const LIKED_KEY = `${POLL_ID}-liked`;
+
+  const inputEl   = document.getElementById('entryInput');
+  const submitBtn = document.getElementById('submitBtn');
+  const entriesEl = document.getElementById('entries');
+  const countEl   = document.getElementById('countText');
+  const statusEl  = document.getElementById('status');
+
+  let entries     = [];
+  let likedMap    = JSON.parse(localStorage.getItem(LIKED_KEY) || '{}');
+  let busy        = false;
+
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  function timeAgo(ts){
+    if(!ts) return 'just now';
+    const d = Date.now() - ts;
+    const m = Math.floor(d/60000);
+    if(m<1) return 'just now';
+    if(m<60) return `${m}m ago`;
+    const h = Math.floor(m/60);
+    if(h<24) return `${h}h ago`;
+    return `${Math.floor(h/24)}d ago`;
+  }
+
+  function totalResponses(){
+    return entries.reduce((s,e) => s + Number(e.count||0), 0);
+  }
+
+  function render(){
+    const unique    = entries.length;
+    const responses = totalResponses();
+    countEl.textContent = `${responses} ${responses===1?'response':'responses'} · ${unique} unique`;
+
+    if(!entries.length){
+      entriesEl.innerHTML = `<div class="empty-state">Be the first to share what you'll give your full attention to.</div>`;
+      return;
+    }
+
+    const sorted = entries.slice().sort((a,b) =>
+      (Number(b.count||0) - Number(a.count||0)) ||
+      ((b.updatedAt||0) - (a.updatedAt||0))
+    );
+
+    entriesEl.innerHTML = sorted.map(e => {
+      const alreadyLiked = !!likedMap[e.id];
+      return `
+        <div class="entry">
+          <div class="entry-body">
+            <div class="entry-prefix">Unitasking on</div>
+            <div class="entry-text">${esc(e.text||'')}</div>
+            <div class="entry-meta">${e.count||0} ${Number(e.count)===1?'person':'people'} · ${timeAgo(e.updatedAt||e.createdAt)}</div>
+          </div>
+          <button type="button" class="like-btn${alreadyLiked?' liked':''}"
+            data-id="${e.id}" ${alreadyLiked?'disabled':''}>
+            +1
+          </button>
+        </div>`;
+    }).join('');
+
+    entriesEl.querySelectorAll('.like-btn').forEach(btn => {
+      btn.addEventListener('click', () => plusOne(btn.dataset.id));
+    });
+  }
+
+  async function load(showLoading){
+    if(showLoading) countEl.textContent = 'Loading…';
+    try {
+      const res  = await fetch(API_URL, { cache: 'no-store' });
+      if(!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      entries = Array.isArray(data.entries) ? data.entries : [];
+      render();
+    } catch(err){
+      console.error(err);
+      if(showLoading) countEl.textContent = 'Could not load — try refreshing';
+    }
+  }
+
+  async function submit(){
+    const text = inputEl.value.trim();
+    if(!text || busy) return;
+    busy = true; submitBtn.disabled = true; statusEl.textContent = 'Posting…';
+    try {
+      const res  = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'add', text })
+      });
+      if(!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      entries = Array.isArray(data.entries) ? data.entries : [];
+      inputEl.value = '';
+      statusEl.textContent = 'Posted ✓';
+      render();
+    } catch(err){
+      console.error(err);
+      statusEl.textContent = 'Could not post right now — please try again.';
+    } finally {
+      busy = false; submitBtn.disabled = false;
+      setTimeout(() => { if(statusEl.textContent === 'Posted ✓') statusEl.textContent = ''; }, 2000);
+    }
+  }
+
+  async function plusOne(id){
+    if(likedMap[id] || busy) return;
+    likedMap[id] = true;
+    localStorage.setItem(LIKED_KEY, JSON.stringify(likedMap));
+    render();
+    try {
+      const res  = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'like', id })
+      });
+      if(!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      entries = Array.isArray(data.entries) ? data.entries : entries;
+      render();
+    } catch(err){
+      console.error(err);
+      delete likedMap[id];
+      localStorage.setItem(LIKED_KEY, JSON.stringify(likedMap));
+      render();
+    }
+  }
+
+  submitBtn.addEventListener('click', submit);
+  inputEl.addEventListener('keydown', e => { if(e.key === 'Enter') submit(); });
+
+  load(true);
+  setInterval(() => load(false), 10000);
+</script>
+</body>
+</html>
