@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>#RiseFor65 — Follow the Light</title>
+  <title>#RiseFor65 — Ride the Wave</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       background:
         radial-gradient(ellipse at 20% 30%, rgba(200,230,255,0.18) 0%, transparent 55%),
@@ -21,79 +20,67 @@
     }
 
     /* ── GAME ── */
-    .game-section {
-      width: 100%;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    .top-bar {
-      padding: 20px 24px 0;
-      display: flex; justify-content: space-between; align-items: center;
-    }
+    .game-section { width: 100%; min-height: 100vh; display: flex; flex-direction: column; }
+    .top-bar { padding: 20px 24px 0; display: flex; justify-content: space-between; align-items: center; }
     .badge {
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(180,215,255,0.18);
-      border-radius: 999px;
-      padding: 8px 16px;
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(180,215,255,0.18);
+      border-radius: 999px; padding: 8px 16px;
       font-size: 11px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase;
       color: rgba(220,238,255,0.85);
     }
     .hashtag { font-size: 12px; color: rgba(200,225,255,0.38); }
-    .center-copy { text-align: center; padding: 22px 24px 10px; }
+    .center-copy { text-align: center; padding: 18px 24px 8px; }
     .game-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic; font-weight: 500;
-      font-size: clamp(32px, 5.5vw, 52px);
-      line-height: 1.0; color: #eef7ff; letter-spacing: -0.5px;
+      font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500;
+      font-size: clamp(30px, 5.5vw, 50px); line-height: 1.0; color: #eef7ff; letter-spacing: -0.5px;
     }
     .game-sub {
-      margin-top: 10px;
-      font-size: clamp(13px, 2.2vw, 15px);
-      line-height: 1.55; color: rgba(210,232,255,0.70);
-      max-width: 520px; margin-left: auto; margin-right: auto;
+      margin-top: 10px; font-size: clamp(13px, 2.2vw, 15px); line-height: 1.6;
+      color: rgba(210,232,255,0.68); max-width: 540px; margin-left: auto; margin-right: auto;
     }
-    .canvas-wrap {
-      position: relative; width: 100%;
-      flex: 1; min-height: clamp(220px, 40vh, 340px);
+    .breath-key {
+      display: flex; justify-content: center; align-items: center; gap: 20px;
+      margin-top: 10px; flex-wrap: wrap;
     }
+    .breath-key-item {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 12px; color: rgba(200,225,255,0.55); letter-spacing: 0.3px;
+    }
+    .key-swatch {
+      width: 28px; height: 4px; border-radius: 999px;
+    }
+    .canvas-wrap { position: relative; width: 100%; flex: 1; min-height: clamp(240px, 42vh, 360px); }
     canvas { width: 100%; height: 100%; display: block; touch-action: none; cursor: pointer; }
     .finish-overlay {
-      position: absolute; inset: 0;
-      display: flex; flex-direction: column;
+      position: absolute; inset: 0; display: flex; flex-direction: column;
       align-items: center; justify-content: center; gap: 12px;
       background: rgba(18,27,52,0.0); pointer-events: none; opacity: 0;
-      transition: opacity 1.2s ease, background 1.2s ease;
-      z-index: 20; text-align: center; padding: 24px;
+      transition: opacity 1.4s ease, background 1.4s ease; z-index: 20; text-align: center; padding: 24px;
     }
-    .finish-overlay.show { opacity: 1; pointer-events: all; background: rgba(18,27,52,0.72); }
+    .finish-overlay.show { opacity: 1; pointer-events: all; background: rgba(18,27,52,0.78); }
     .finish-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic; font-weight: 500;
-      font-size: clamp(30px, 5.5vw, 50px);
-      line-height: 1.1; color: #eef7ff;
+      font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500;
+      font-size: clamp(30px, 5.5vw, 50px); line-height: 1.1; color: #eef7ff;
     }
-    .finish-sub { font-size: 14px; line-height: 1.6; color: rgba(220,240,255,0.78); max-width: 440px; }
+    .finish-sub { font-size: 14px; line-height: 1.7; color: rgba(220,240,255,0.78); max-width: 440px; }
     .finish-cta {
-      margin-top: 8px;
-      background: rgba(160,205,255,0.14);
-      border: 1px solid rgba(180,215,255,0.30);
+      margin-top: 8px; background: rgba(160,205,255,0.14); border: 1px solid rgba(180,215,255,0.30);
       border-radius: 999px; padding: 11px 28px;
       font-size: 13px; font-weight: 600; color: rgba(220,240,255,0.90);
       cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s;
     }
     .finish-cta:hover { background: rgba(160,205,255,0.26); }
-    .ui-bottom {
-      padding: 8px 24px 12px;
-      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    .ui-bottom { padding: 8px 24px 14px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .breath-indicator {
+      font-size: 13px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase;
+      min-width: 80px; text-align: center; transition: color 0.4s ease;
     }
     .status-msg {
-      font-size: 13px; font-weight: 500; color: rgba(220,240,255,0.72);
-      flex: 1; text-align: center; transition: color 0.6s ease; min-height: 20px;
+      font-size: 13px; font-weight: 500; color: rgba(220,240,255,0.70);
+      flex: 1; text-align: center; transition: color 0.5s ease; min-height: 20px;
     }
     .prog-pill {
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(180,215,255,0.16);
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(180,215,255,0.16);
       border-radius: 999px; padding: 6px 12px;
       font-size: 10px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase;
       color: rgba(210,232,255,0.55); white-space: nowrap;
@@ -107,41 +94,34 @@
     }
     .wall-hero { text-align: center; margin-bottom: 28px; }
     .wall-hero-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic; font-weight: 500;
-      font-size: clamp(24px, 4vw, 36px);
-      color: rgba(220,240,255,0.92); line-height: 1.1;
+      font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500;
+      font-size: clamp(24px, 4vw, 36px); color: rgba(220,240,255,0.92); line-height: 1.1;
     }
     .wall-hero-sub {
       margin-top: 8px; font-size: 14px; line-height: 1.6;
-      color: rgba(200,225,255,0.50); max-width: 480px;
-      margin-left: auto; margin-right: auto;
+      color: rgba(200,225,255,0.50); max-width: 480px; margin-left: auto; margin-right: auto;
     }
     .submit-card {
-      background: rgba(255,255,255,0.065);
-      border: 1px solid rgba(180,215,255,0.16);
+      background: rgba(255,255,255,0.065); border: 1px solid rgba(180,215,255,0.16);
       border-radius: 16px; padding: 20px; margin-bottom: 24px;
     }
     .input-row { display: flex; gap: 10px; flex-wrap: wrap; }
     .prefix-wrap { position: relative; flex: 1 1 260px; }
     .prefix-label {
       position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
-      font-size: 14px; color: rgba(200,225,255,0.45);
-      pointer-events: none; white-space: nowrap;
+      font-size: 14px; color: rgba(200,225,255,0.45); pointer-events: none; white-space: nowrap;
     }
     .entry-input {
-      width: 100%;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(180,215,255,0.22);
-      border-radius: 12px; padding: 13px 14px 13px 192px;
-      font-size: 15px; font-family: 'DM Sans', sans-serif;
-      color: #e8f4ff; outline: none; transition: border-color 0.3s;
+      width: 100%; background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(180,215,255,0.22); border-radius: 12px;
+      padding: 13px 14px 13px 192px;
+      font-size: 15px; font-family: 'DM Sans', sans-serif; color: #e8f4ff;
+      outline: none; transition: border-color 0.3s;
     }
     .entry-input::placeholder { color: rgba(200,225,255,0.28); }
     .entry-input:focus { border-color: rgba(180,215,255,0.45); }
     .post-btn {
-      background: rgba(160,205,255,0.14);
-      border: 1px solid rgba(180,215,255,0.30);
+      background: rgba(160,205,255,0.14); border: 1px solid rgba(180,215,255,0.30);
       border-radius: 12px; padding: 13px 22px;
       font-size: 14px; font-weight: 600; color: rgba(220,240,255,0.92);
       cursor: pointer; font-family: 'DM Sans', sans-serif;
@@ -156,15 +136,13 @@
       margin-bottom: 14px; flex-wrap: wrap; gap: 8px;
     }
     .wall-label {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic; font-weight: 500;
+      font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500;
       font-size: clamp(18px, 3vw, 24px); color: rgba(220,240,255,0.88);
     }
     .wall-count { font-size: 12px; color: rgba(200,225,255,0.42); }
     .entries { display: grid; gap: 10px; }
     .entry {
-      background: rgba(255,255,255,0.065);
-      border: 1px solid rgba(180,215,255,0.16);
+      background: rgba(255,255,255,0.065); border: 1px solid rgba(180,215,255,0.16);
       border-radius: 16px; padding: 14px 16px;
       display: flex; justify-content: space-between; align-items: center; gap: 16px;
       transition: border-color 0.3s;
@@ -175,10 +153,8 @@
     .entry-text { font-size: 16px; font-weight: 500; color: rgba(225,242,255,0.90); word-break: break-word; line-height: 1.35; }
     .entry-meta { margin-top: 5px; font-size: 12px; color: rgba(190,220,255,0.40); }
     .like-btn {
-      flex: 0 0 auto;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(180,215,255,0.20);
-      border-radius: 999px; padding: 8px 16px;
+      flex: 0 0 auto; background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(180,215,255,0.20); border-radius: 999px; padding: 8px 16px;
       font-size: 13px; font-weight: 600; color: rgba(210,235,255,0.75);
       cursor: pointer; font-family: 'DM Sans', sans-serif;
       transition: background 0.2s, border-color 0.2s, color 0.2s; white-space: nowrap;
@@ -187,12 +163,10 @@
     .like-btn:disabled { opacity: 0.42; cursor: not-allowed; }
     .like-btn.liked { background: rgba(160,205,255,0.16); border-color: rgba(180,215,255,0.40); color: rgba(210,240,255,0.90); }
     .empty-state {
-      background: rgba(255,255,255,0.055);
-      border: 1px dashed rgba(180,215,255,0.16);
+      background: rgba(255,255,255,0.055); border: 1px dashed rgba(180,215,255,0.16);
       border-radius: 16px; padding: 28px; text-align: center;
       color: rgba(200,225,255,0.42); font-size: 14px; line-height: 1.6;
     }
-
     @media (max-width: 480px) {
       .entry-input { padding-left: 148px; }
       .prefix-label { font-size: 13px; }
@@ -201,34 +175,55 @@
 </head>
 <body>
 
-<!-- GAME -->
+<!-- ═══ GAME ═══ -->
 <div class="game-section">
   <div class="top-bar">
-    <div class="badge">✦ One thing at a time</div>
+    <div class="badge">✦ Ride the wave of your breath</div>
     <div class="hashtag">#RiseFor65</div>
   </div>
+
   <div class="center-copy">
-    <div class="game-title">Follow the light</div>
-    <div class="game-sub">Press gently and trace the path from left to right. There's no rush — focus is not force, it's flow.</div>
+    <div class="game-title">Follow only your breath</div>
+    <div class="game-sub">
+      Place your finger on the wave and breathe with it — <em>inhale</em> as you rise,
+      <em>exhale</em> as you fall. Let your breath set the pace. As you stay with it,
+      distractions quietly dissolve.
+    </div>
+    <div class="breath-key">
+      <div class="breath-key-item">
+        <div class="key-swatch" style="background:rgba(160,220,255,0.70);"></div>
+        Inhale — rise
+      </div>
+      <div class="breath-key-item">
+        <div class="key-swatch" style="background:rgba(180,200,255,0.45);"></div>
+        Exhale — fall
+      </div>
+    </div>
   </div>
+
   <div class="canvas-wrap" id="cwrap">
     <canvas id="c"></canvas>
     <div class="finish-overlay" id="finish">
-      <div class="finish-title">You found<br>the stillness.</div>
-      <div class="finish-sub">That's what focus feels like — not effort, but ease.</div>
-      <button class="finish-cta" onclick="document.querySelector('.wall-section').scrollIntoView({behavior:'smooth'})">
+      <div class="finish-title">Still. Clear.<br>Just breathing.</div>
+      <div class="finish-sub">
+        When we follow only one thing — our breath — the rest falls quiet on its own.
+        That is focus. That is enough.
+      </div>
+      <button class="finish-cta"
+        onclick="document.querySelector('.wall-section').scrollIntoView({behavior:'smooth'})">
         Share what you'll focus on ↓
       </button>
     </div>
   </div>
+
   <div class="ui-bottom">
+    <div class="breath-indicator" id="breathIndicator" style="color:rgba(160,220,255,0.75);">inhale</div>
+    <div class="status-msg" id="gameStatus">Rest a moment, then place your finger on the wave</div>
     <div class="prog-pill" id="prog">0%</div>
-    <div class="status-msg" id="gameStatus">Touch and trace gently from left to right</div>
-    <div class="prog-pill" style="opacity:0;pointer-events:none;">0%</div>
   </div>
 </div>
 
-<!-- WALL -->
+<!-- ═══ WALL ═══ -->
 <div class="wall-section">
   <div class="wall-hero">
     <div class="wall-hero-title">What will you give<br>your full attention to?</div>
@@ -253,107 +248,326 @@
   <div class="entries" id="entries"></div>
 </div>
 
+<!-- ═══ GAME SCRIPT ═══ -->
 <script>
-/* ── GAME ── */
 (function(){
-  const canvas=document.getElementById('c');
-  const ctx=canvas.getContext('2d');
-  const statusEl=document.getElementById('gameStatus');
-  const progEl=document.getElementById('prog');
-  const finishEl=document.getElementById('finish');
-  let w=0,h=0,dpr=1,t=0;
-  let pointerDown=false,pointer={x:0,y:0};
-  let progress=0,completed=false,holdStarted=false,distractionAlpha=1.0;
-  const SEEDS=[[0.20,0.28],[0.80,0.30],[0.18,0.72],[0.78,0.68],[0.50,0.18],[0.50,0.82]];
-  const LABELS=['Notifications','Next task','Email','What if…','Scroll','Overthinking'];
+  const canvas   = document.getElementById('c');
+  const ctx      = canvas.getContext('2d');
+  const statusEl = document.getElementById('gameStatus');
+  const progEl   = document.getElementById('prog');
+  const finishEl = document.getElementById('finish');
+  const breathEl = document.getElementById('breathIndicator');
+
+  let w=0, h=0, dpr=1, t=0;
+  let pointerDown=false, pointer={x:0,y:0};
+  let progress=0, completed=false, holdStarted=false;
+
+  // ── Distraction bubbles ──
+  // Each bubble: { lx, ly, label, burst, burstT, burstProgress }
+  // lx/ly are 0-1 normalised positions; burst triggers when tracer passes x
+  const BUBBLE_DEFS = [
+    { lx:0.14, ly:0.28, label:'Notifications' },
+    { lx:0.30, ly:0.75, label:'Email' },
+    { lx:0.46, ly:0.22, label:'What if…' },
+    { lx:0.60, ly:0.78, label:'Scroll' },
+    { lx:0.74, ly:0.25, label:'Next task' },
+    { lx:0.88, ly:0.72, label:'Overthinking' },
+  ];
+  let bubbles = BUBBLE_DEFS.map(b => ({
+    ...b,
+    burst: false,
+    burstT: 0,
+    // small gentle float offsets
+    floatSeed: Math.random() * Math.PI * 2,
+  }));
+
+  // burst particle pool
+  let particles = [];
+
   function resize(){
-    dpr=Math.max(1,window.devicePixelRatio||1);
-    const wrap=document.getElementById('cwrap');
-    w=wrap.clientWidth; h=wrap.clientHeight;
-    canvas.style.width=w+'px'; canvas.style.height=h+'px';
-    canvas.width=Math.floor(w*dpr); canvas.height=Math.floor(h*dpr);
+    dpr = Math.max(1, window.devicePixelRatio||1);
+    const wrap = document.getElementById('cwrap');
+    w = wrap.clientWidth; h = wrap.clientHeight;
+    canvas.style.width = w+'px'; canvas.style.height = h+'px';
+    canvas.width = Math.floor(w*dpr); canvas.height = Math.floor(h*dpr);
     ctx.setTransform(dpr,0,0,dpr,0,0);
   }
-  window.addEventListener('resize',resize); resize();
-  function lerp(a,b,n){return a+(b-a)*n;}
-  function pathY(x,tt){
-    const left=w*0.08,right=w*0.92,nx=(x-left)/(right-left);
-    return h*0.56+Math.sin(tt*0.00045)*8+Math.sin(nx*Math.PI*2.2+tt*0.00055)*Math.min(38,h*0.07);
+  window.addEventListener('resize', resize); resize();
+
+  function lerp(a,b,n){ return a+(b-a)*n; }
+  function easeOut(t){ return 1-Math.pow(1-t,3); }
+
+  // Wave: gentle sinusoid. Higher y = lower on screen.
+  // We want: going UP on screen = inhale, DOWN = exhale
+  function pathY(x, tt){
+    const left=w*0.06, right=w*0.94;
+    const nx=(x-left)/(right-left);
+    const base=h*0.54;
+    const amp=Math.min(52, h*0.13);
+    // slow, breathing-pace wave
+    return base - Math.sin(nx*Math.PI*2.0)*amp;
   }
-  function pathPt(p,tt){const x=lerp(w*0.08,w*0.92,p);return{x,y:pathY(x,tt)};}
+  function pathPt(p, tt){
+    const x=lerp(w*0.06, w*0.94, p);
+    return { x, y:pathY(x,tt) };
+  }
+
+  // Determine if tracer is rising or falling
+  function isRising(p){
+    const eps=0.01;
+    const y1=pathY(lerp(w*0.06,w*0.94,Math.max(0,p-eps)),t);
+    const y2=pathY(lerp(w*0.06,w*0.94,Math.min(1,p+eps)),t);
+    return y2 < y1; // screen Y decreases = going up = inhale
+  }
+
   function drawPath(tt){
-    const left=w*0.08,right=w*0.92,N=100;
-    ctx.save();ctx.lineCap='round';ctx.lineJoin='round';
-    ctx.beginPath();for(let i=0;i<=N;i++){const x=lerp(left,right,i/N);i===0?ctx.moveTo(x,pathY(x,tt)):ctx.lineTo(x,pathY(x,tt));}
-    ctx.strokeStyle='rgba(140,200,255,0.10)';ctx.lineWidth=32;ctx.stroke();
-    ctx.beginPath();for(let i=0;i<=N;i++){const x=lerp(left,right,i/N);i===0?ctx.moveTo(x,pathY(x,tt)):ctx.lineTo(x,pathY(x,tt));}
-    ctx.strokeStyle='rgba(170,220,255,0.22)';ctx.lineWidth=12;ctx.stroke();
-    if(progress>0.005){
-      ctx.beginPath();const end=Math.floor(N*progress);
-      for(let i=0;i<=end;i++){const x=lerp(left,right,i/N);i===0?ctx.moveTo(x,pathY(x,tt)):ctx.lineTo(x,pathY(x,tt));}
-      const grd=ctx.createLinearGradient(left,0,lerp(left,right,progress),0);
-      grd.addColorStop(0,'rgba(180,225,255,0.55)');grd.addColorStop(1,'rgba(220,245,255,0.92)');
-      ctx.strokeStyle=grd;ctx.lineWidth=7;ctx.stroke();
+    const left=w*0.06, right=w*0.94, N=120;
+    ctx.save(); ctx.lineCap='round'; ctx.lineJoin='round';
+
+    // soft glow halo
+    ctx.beginPath();
+    for(let i=0;i<=N;i++){const x=lerp(left,right,i/N);i===0?ctx.moveTo(x,pathY(x,tt)):ctx.lineTo(x,pathY(x,tt));}
+    ctx.strokeStyle='rgba(140,200,255,0.08)'; ctx.lineWidth=38; ctx.stroke();
+
+    // colour-coded path: inhale=blue-ish, exhale=softer purple
+    // draw in segments
+    for(let i=0;i<N;i++){
+      const x0=lerp(left,right,i/N), x1=lerp(left,right,(i+1)/N);
+      const y0=pathY(x0,tt), y1=pathY(x1,tt);
+      const going_up = y1 < y0;
+      ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1);
+      ctx.strokeStyle = going_up ? 'rgba(160,220,255,0.30)' : 'rgba(180,200,255,0.20)';
+      ctx.lineWidth = 10; ctx.stroke();
     }
+
+    // traced portion — bright
+    if(progress>0.005){
+      ctx.beginPath();
+      const end=Math.floor(N*progress);
+      for(let i=0;i<=end;i++){const x=lerp(left,right,i/N);i===0?ctx.moveTo(x,pathY(x,tt)):ctx.lineTo(x,pathY(x,tt));}
+      // colour the trace too by slope at progress point
+      const rising = isRising(progress);
+      const grd=ctx.createLinearGradient(left,0,lerp(left,right,progress),0);
+      grd.addColorStop(0, rising?'rgba(140,210,255,0.60)':'rgba(160,185,255,0.50)');
+      grd.addColorStop(1, rising?'rgba(200,240,255,0.95)':'rgba(195,215,255,0.85)');
+      ctx.strokeStyle=grd; ctx.lineWidth=7; ctx.stroke();
+    }
+
     ctx.restore();
   }
-  function drawLabels(tt){
-    const pt=pathPt(0,tt),pe=pathPt(1,tt);
+
+  function drawEndLabels(tt){
+    const pt=pathPt(0,tt), pe=pathPt(1,tt);
     function chip(x,y,label){
-      ctx.save();ctx.font='500 11px "DM Sans",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
-      const tw=ctx.measureText(label).width,bw=tw+22,bh=26;
-      ctx.fillStyle='rgba(255,255,255,0.07)';ctx.strokeStyle='rgba(180,215,255,0.18)';ctx.lineWidth=1;
-      ctx.beginPath();ctx.roundRect(x-bw/2,y-bh/2,bw,bh,13);ctx.fill();ctx.stroke();
-      ctx.fillStyle='rgba(210,235,255,0.52)';ctx.fillText(label,x,y+0.5);ctx.restore();
+      ctx.save(); ctx.font='500 11px "DM Sans",sans-serif';
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      const tw=ctx.measureText(label).width, bw=tw+22, bh=26;
+      ctx.fillStyle='rgba(255,255,255,0.07)'; ctx.strokeStyle='rgba(180,215,255,0.18)'; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.roundRect(x-bw/2,y-bh/2,bw,bh,13); ctx.fill(); ctx.stroke();
+      ctx.fillStyle='rgba(210,235,255,0.50)'; ctx.fillText(label,x,y+0.5);
+      ctx.restore();
     }
-    chip(pt.x,pt.y-32,'Start here');chip(pe.x,pe.y-32,'Finish');
+    chip(pt.x, pt.y-34, 'Start here');
+    chip(pe.x, pe.y-34, 'Finish');
   }
-  function drawDistractions(tt,alpha){
-    if(alpha<=0.01)return;
-    ctx.save();ctx.font='500 11px "DM Sans",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
-    LABELS.forEach((label,i)=>{
-      const s=SEEDS[i],x=w*s[0]+Math.sin(tt*0.0006+i)*14,y=h*s[1]+Math.cos(tt*0.00055+i*0.7)*10;
-      const tw=ctx.measureText(label).width,bw=tw+22,bh=28,fa=alpha*0.20;
-      ctx.fillStyle=`rgba(255,255,255,${fa})`;ctx.strokeStyle=`rgba(180,215,255,${fa*1.4})`;ctx.lineWidth=1;
-      ctx.beginPath();ctx.roundRect(x-bw/2,y-bh/2,bw,bh,14);ctx.fill();ctx.stroke();
-      ctx.fillStyle=`rgba(210,232,255,${alpha*0.42})`;ctx.fillText(label,x,y+0.5);
+
+  function drawBubbles(tt){
+    ctx.save();
+    ctx.font='500 11px "DM Sans",sans-serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+
+    bubbles.forEach(b => {
+      if(b.burst && b.burstProgress >= 1) return; // fully gone
+
+      const bx = w * b.lx + Math.sin(tt*0.0006 + b.floatSeed) * 10;
+      const by = h * b.ly + Math.cos(tt*0.00055 + b.floatSeed) * 8;
+      const tw = ctx.measureText(b.label).width;
+      const bw = tw + 22, bh = 28;
+
+      if(!b.burst){
+        // fade out as progress nears (start fading 10% before tracer reaches)
+        const tracerX = lerp(w*0.06, w*0.94, progress);
+        const bubbleX = w * b.lx;
+        const dist = bubbleX - tracerX;
+        const fadeStart = w * 0.12;
+        const fadeAlpha = dist < 0 ? 0 : Math.min(1, dist / fadeStart);
+
+        ctx.globalAlpha = fadeAlpha;
+        ctx.fillStyle='rgba(255,255,255,0.09)';
+        ctx.strokeStyle='rgba(180,215,255,0.22)';
+        ctx.lineWidth=1;
+        ctx.beginPath(); ctx.roundRect(bx-bw/2, by-bh/2, bw, bh, 14); ctx.fill(); ctx.stroke();
+        ctx.fillStyle='rgba(210,232,255,0.52)';
+        ctx.fillText(b.label, bx, by+0.5);
+        ctx.globalAlpha=1;
+      } else {
+        // burst animation — particles drawn separately; draw expanding ring
+        const ep = easeOut(b.burstProgress);
+        const ring = 30 + ep * 40;
+        ctx.globalAlpha = (1-ep) * 0.4;
+        ctx.beginPath(); ctx.arc(bx, by, ring, 0, Math.PI*2);
+        ctx.strokeStyle='rgba(190,230,255,0.6)'; ctx.lineWidth=1.5; ctx.stroke();
+        ctx.globalAlpha=1;
+      }
     });
     ctx.restore();
   }
-  function drawTracer(tt){
-    const p=pathPt(progress,tt),pulse=0.5+0.5*Math.sin(tt*0.004);
+
+  function spawnBurst(bx, by){
+    const count = 8;
+    for(let i=0;i<count;i++){
+      const angle = (i/count)*Math.PI*2 + Math.random()*0.4;
+      const speed = 0.8 + Math.random()*1.2;
+      particles.push({
+        x:bx, y:by,
+        vx: Math.cos(angle)*speed,
+        vy: Math.sin(angle)*speed,
+        life: 1.0,
+        r: 2 + Math.random()*2,
+      });
+    }
+  }
+
+  function updateBursts(dt){
+    const tracerX = lerp(w*0.06, w*0.94, progress);
+    bubbles.forEach(b => {
+      if(b.burst) {
+        b.burstT += dt;
+        b.burstProgress = Math.min(1, b.burstT / 600);
+        return;
+      }
+      // trigger burst when tracer x passes bubble x (and we are holding)
+      if(pointerDown && tracerX >= w * b.lx - 4){
+        b.burst = true;
+        b.burstT = 0;
+        b.burstProgress = 0;
+        const bx = w*b.lx + Math.sin(t*0.0006+b.floatSeed)*10;
+        const by = h*b.ly + Math.cos(t*0.00055+b.floatSeed)*8;
+        spawnBurst(bx, by);
+      }
+    });
+
+    // update particles
+    particles = particles.filter(p => p.life > 0);
+    particles.forEach(p => {
+      p.x += p.vx * (dt * 0.06);
+      p.y += p.vy * (dt * 0.06);
+      p.vy += 0.015; // gentle gravity
+      p.life -= dt * 0.0022;
+    });
+  }
+
+  function drawParticles(){
     ctx.save();
-    ctx.beginPath();ctx.arc(p.x,p.y,16+pulse*4,0,Math.PI*2);ctx.fillStyle=`rgba(180,225,255,${0.06+pulse*0.04})`;ctx.fill();
-    ctx.beginPath();ctx.arc(p.x,p.y,9,0,Math.PI*2);ctx.fillStyle='rgba(230,248,255,0.96)';ctx.fill();
+    particles.forEach(p => {
+      ctx.globalAlpha = Math.max(0, p.life) * 0.7;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle='rgba(200,235,255,0.9)'; ctx.fill();
+    });
+    ctx.globalAlpha=1;
     ctx.restore();
   }
-  function drawPointer(){
-    if(!pointerDown)return;
-    ctx.save();ctx.beginPath();ctx.arc(pointer.x,pointer.y,6,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,0.6)';ctx.fill();ctx.restore();
+
+  function drawTracer(tt){
+    const p=pathPt(progress,tt);
+    const rising=isRising(progress);
+    const pulse=0.5+0.5*Math.sin(tt*0.003);
+    ctx.save();
+    // outer glow
+    ctx.beginPath(); ctx.arc(p.x, p.y, 18+pulse*5, 0, Math.PI*2);
+    ctx.fillStyle = rising ? `rgba(160,220,255,${0.06+pulse*0.04})` : `rgba(180,200,255,${0.06+pulse*0.04})`;
+    ctx.fill();
+    // core
+    ctx.beginPath(); ctx.arc(p.x, p.y, 9, 0, Math.PI*2);
+    ctx.fillStyle = rising ? 'rgba(220,248,255,0.97)' : 'rgba(205,215,255,0.92)';
+    ctx.fill();
+    ctx.restore();
   }
+
+  function updateBreathUI(){
+    if(!pointerDown || completed) return;
+    const rising = isRising(progress);
+    if(rising){
+      breathEl.textContent='inhale';
+      breathEl.style.color='rgba(160,220,255,0.85)';
+      statusEl.textContent='Breathing in — follow the rise…';
+      statusEl.style.color='rgba(160,220,255,0.70)';
+    } else {
+      breathEl.textContent='exhale';
+      breathEl.style.color='rgba(180,200,255,0.72)';
+      statusEl.textContent='Breathing out — follow the fall…';
+      statusEl.style.color='rgba(180,200,255,0.62)';
+    }
+  }
+
   function update(dt){
-    if(completed){distractionAlpha=Math.max(0,distractionAlpha-dt*0.0018);return;}
-    const target=pathPt(progress,t),dist=Math.hypot(pointer.x-target.x,pointer.y-target.y),tol=Math.max(36,w*0.042);
+    if(completed){ return; }
+
+    const target=pathPt(progress,t);
+    const dist=Math.hypot(pointer.x-target.x, pointer.y-target.y);
+    const tol=Math.max(40, w*0.048);
+
     if(pointerDown){
       holdStarted=true;
-      if(dist<tol){progress+=0.0013*dt;statusEl.textContent='Breathe and stay with it…';statusEl.style.color='rgba(200,235,255,0.75)';}
-      else{progress-=0.0006*dt;statusEl.textContent='Drift back gently to the light';statusEl.style.color='rgba(210,220,255,0.60)';}
-    }else{
-      if(holdStarted){statusEl.textContent='Touch and continue the path';statusEl.style.color='rgba(200,225,255,0.62)';}
-      progress-=0.00028*dt;
+      if(dist<tol){
+        progress += 0.0012 * dt;
+      } else {
+        progress -= 0.0005 * dt;
+        statusEl.textContent='Come back to the wave — and your breath';
+        statusEl.style.color='rgba(210,220,255,0.55)';
+        breathEl.textContent='—';
+        breathEl.style.color='rgba(200,225,255,0.35)';
+      }
+    } else {
+      if(holdStarted && !completed){
+        statusEl.textContent='Rest, then place your finger back on the wave';
+        statusEl.style.color='rgba(200,225,255,0.55)';
+        breathEl.textContent='—';
+        breathEl.style.color='rgba(200,225,255,0.35)';
+      }
+      progress -= 0.00022 * dt;
     }
+
     progress=Math.max(0,Math.min(1,progress));
     progEl.textContent=Math.round(progress*100)+'%';
-    distractionAlpha=Math.max(0.05,1-progress*1.1);
+
+    if(pointerDown){
+      const target2=pathPt(progress,t);
+      const d2=Math.hypot(pointer.x-target2.x, pointer.y-target2.y);
+      if(d2<tol) updateBreathUI();
+    }
+
+    updateBursts(dt);
+
     if(progress>=1){
-      completed=true;statusEl.textContent='You made it — rest here a moment.';statusEl.style.color='rgba(220,242,255,0.88)';progEl.textContent='100%';
-      setTimeout(()=>finishEl.classList.add('show'),600);
+      completed=true;
+      statusEl.textContent='Complete — rest in this stillness.';
+      statusEl.style.color='rgba(220,242,255,0.85)';
+      breathEl.textContent='✦';
+      breathEl.style.color='rgba(200,235,255,0.70)';
+      progEl.textContent='100%';
+      setTimeout(()=>finishEl.classList.add('show'), 800);
     }
   }
+
   let last=performance.now();
-  function loop(now){const dt=Math.min(32,now-last);last=now;t=now;update(dt);ctx.clearRect(0,0,w,h);drawDistractions(now,distractionAlpha);drawPath(now);drawLabels(now);drawTracer(now);drawPointer();requestAnimationFrame(loop);}
+  function loop(now){
+    const dt=Math.min(32,now-last); last=now; t=now;
+    update(dt);
+    ctx.clearRect(0,0,w,h);
+    drawBubbles(now);
+    drawParticles();
+    drawPath(now);
+    drawEndLabels(now);
+    drawTracer(now);
+    requestAnimationFrame(loop);
+  }
   requestAnimationFrame(loop);
-  function setPtr(e){const rect=canvas.getBoundingClientRect(),src=e.touches?e.touches[0]:e;pointer.x=src.clientX-rect.left;pointer.y=src.clientY-rect.top;}
+
+  function setPtr(e){
+    const rect=canvas.getBoundingClientRect(), src=e.touches?e.touches[0]:e;
+    pointer.x=src.clientX-rect.left; pointer.y=src.clientY-rect.top;
+  }
   canvas.addEventListener('pointerdown',e=>{pointerDown=true;setPtr(e);canvas.setPointerCapture(e.pointerId);});
   canvas.addEventListener('pointermove',e=>{setPtr(e);});
   canvas.addEventListener('pointerup',()=>{pointerDown=false;});
@@ -362,8 +576,10 @@
   canvas.addEventListener('touchmove',e=>{setPtr(e);},{passive:true});
   canvas.addEventListener('touchend',()=>{pointerDown=false;},{passive:true});
 })();
+</script>
 
-/* ── WALL ── */
+<!-- ═══ WALL SCRIPT ═══ -->
+<script>
 (function(){
   const POLL_ID='risefor65-focus-wall-v1';
   const API_URL=`/api/focus-wall?poll=${encodeURIComponent(POLL_ID)}`;
