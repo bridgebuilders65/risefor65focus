@@ -3,91 +3,127 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>#RiseFor65 — The Focus Wall</title>
+  <title>#RiseFor65 — Follow the Light</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --midnight: #18213e;
-      --deep: #1e2e55;
-      --mid: #1c2848;
-      --text: #e8f4ff;
-      --muted: rgba(210,232,255,0.62);
-      --faint: rgba(180,215,255,0.18);
-      --card: rgba(255,255,255,0.065);
-      --border: rgba(180,215,255,0.16);
-      --radius: 16px;
-    }
-
     body {
       background:
-        radial-gradient(ellipse at 20% 30%, rgba(200,230,255,0.14) 0%, transparent 55%),
-        radial-gradient(ellipse at 80% 15%, rgba(185,210,255,0.10) 0%, transparent 50%),
-        linear-gradient(160deg, var(--midnight) 0%, var(--deep) 40%, var(--mid) 70%, var(--midnight) 100%);
-      color: var(--text);
+        radial-gradient(ellipse at 20% 30%, rgba(200,230,255,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 20%, rgba(190,210,255,0.14) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(210,235,255,0.12) 0%, transparent 50%),
+        linear-gradient(160deg, #18213e 0%, #1e2e55 40%, #1c2848 70%, #18213e 100%);
+      color: #e8f4ff;
       font-family: 'DM Sans', system-ui, sans-serif;
       min-height: 100vh;
-      padding: 20px 16px 48px;
+      overflow-x: hidden;
     }
 
-    .wrap { max-width: 680px; margin: 0 auto; }
-
-    /* ── Top bar ── */
+    /* ── GAME ── */
+    .game-section {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
     .top-bar {
+      padding: 20px 24px 0;
       display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 28px;
     }
     .badge {
-      background: var(--card);
-      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(180,215,255,0.18);
       border-radius: 999px;
       padding: 8px 16px;
       font-size: 11px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase;
       color: rgba(220,238,255,0.85);
     }
-    .tag { font-size: 12px; color: rgba(200,225,255,0.38); }
-
-    /* ── Hero copy ── */
-    .hero { text-align: center; padding: 0 8px 32px; }
-    .hero-title {
+    .hashtag { font-size: 12px; color: rgba(200,225,255,0.38); }
+    .center-copy { text-align: center; padding: 22px 24px 10px; }
+    .game-title {
       font-family: 'Cormorant Garamond', serif;
       font-style: italic; font-weight: 500;
-      font-size: clamp(32px, 6vw, 52px);
-      line-height: 1.05;
-      color: #eef7ff;
-      letter-spacing: -0.5px;
+      font-size: clamp(32px, 5.5vw, 52px);
+      line-height: 1.0; color: #eef7ff; letter-spacing: -0.5px;
     }
-    .hero-sub {
-      margin-top: 12px;
+    .game-sub {
+      margin-top: 10px;
       font-size: clamp(13px, 2.2vw, 15px);
-      line-height: 1.6;
-      color: var(--muted);
-      max-width: 500px;
-      margin-left: auto; margin-right: auto;
+      line-height: 1.55; color: rgba(210,232,255,0.70);
+      max-width: 520px; margin-left: auto; margin-right: auto;
     }
-    .hero-rule {
-      width: 40px; height: 1px;
-      background: rgba(180,215,255,0.25);
-      margin: 20px auto 0;
+    .canvas-wrap {
+      position: relative; width: 100%;
+      flex: 1; min-height: clamp(220px, 40vh, 340px);
+    }
+    canvas { width: 100%; height: 100%; display: block; touch-action: none; cursor: pointer; }
+    .finish-overlay {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 12px;
+      background: rgba(18,27,52,0.0); pointer-events: none; opacity: 0;
+      transition: opacity 1.2s ease, background 1.2s ease;
+      z-index: 20; text-align: center; padding: 24px;
+    }
+    .finish-overlay.show { opacity: 1; pointer-events: all; background: rgba(18,27,52,0.72); }
+    .finish-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-weight: 500;
+      font-size: clamp(30px, 5.5vw, 50px);
+      line-height: 1.1; color: #eef7ff;
+    }
+    .finish-sub { font-size: 14px; line-height: 1.6; color: rgba(220,240,255,0.78); max-width: 440px; }
+    .finish-cta {
+      margin-top: 8px;
+      background: rgba(160,205,255,0.14);
+      border: 1px solid rgba(180,215,255,0.30);
+      border-radius: 999px; padding: 11px 28px;
+      font-size: 13px; font-weight: 600; color: rgba(220,240,255,0.90);
+      cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s;
+    }
+    .finish-cta:hover { background: rgba(160,205,255,0.26); }
+    .ui-bottom {
+      padding: 8px 24px 12px;
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    }
+    .status-msg {
+      font-size: 13px; font-weight: 500; color: rgba(220,240,255,0.72);
+      flex: 1; text-align: center; transition: color 0.6s ease; min-height: 20px;
+    }
+    .prog-pill {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(180,215,255,0.16);
+      border-radius: 999px; padding: 6px 12px;
+      font-size: 10px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase;
+      color: rgba(210,232,255,0.55); white-space: nowrap;
     }
 
-    /* ── Submit card ── */
-    .submit-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px;
-      margin-bottom: 24px;
+    /* ── WALL ── */
+    .wall-section {
+      width: 100%; padding: 36px 20px 56px;
+      border-top: 1px solid rgba(180,215,255,0.10);
+      max-width: 680px; margin: 0 auto;
     }
-    .submit-label {
-      font-size: 13px; font-weight: 600; letter-spacing: 0.5px;
-      color: rgba(210,235,255,0.60);
-      text-transform: uppercase; letter-spacing: 1.2px;
-      margin-bottom: 12px;
+    .wall-hero { text-align: center; margin-bottom: 28px; }
+    .wall-hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-weight: 500;
+      font-size: clamp(24px, 4vw, 36px);
+      color: rgba(220,240,255,0.92); line-height: 1.1;
+    }
+    .wall-hero-sub {
+      margin-top: 8px; font-size: 14px; line-height: 1.6;
+      color: rgba(200,225,255,0.50); max-width: 480px;
+      margin-left: auto; margin-right: auto;
+    }
+    .submit-card {
+      background: rgba(255,255,255,0.065);
+      border: 1px solid rgba(180,215,255,0.16);
+      border-radius: 16px; padding: 20px; margin-bottom: 24px;
     }
     .input-row { display: flex; gap: 10px; flex-wrap: wrap; }
-    .prefix-wrap { position: relative; flex: 1 1 280px; }
+    .prefix-wrap { position: relative; flex: 1 1 260px; }
     .prefix-label {
       position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
       font-size: 14px; color: rgba(200,225,255,0.45);
@@ -97,298 +133,292 @@
       width: 100%;
       background: rgba(255,255,255,0.07);
       border: 1px solid rgba(180,215,255,0.22);
-      border-radius: 12px;
-      padding: 13px 14px 13px 192px;
+      border-radius: 12px; padding: 13px 14px 13px 192px;
       font-size: 15px; font-family: 'DM Sans', sans-serif;
-      color: var(--text);
-      outline: none;
-      transition: border-color 0.3s;
+      color: #e8f4ff; outline: none; transition: border-color 0.3s;
     }
     .entry-input::placeholder { color: rgba(200,225,255,0.28); }
     .entry-input:focus { border-color: rgba(180,215,255,0.45); }
-    .submit-btn {
+    .post-btn {
       background: rgba(160,205,255,0.14);
       border: 1px solid rgba(180,215,255,0.30);
-      border-radius: 12px;
-      padding: 13px 22px;
-      font-size: 14px; font-weight: 600;
-      color: rgba(220,240,255,0.92);
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      transition: background 0.2s, border-color 0.2s;
-      white-space: nowrap;
+      border-radius: 12px; padding: 13px 22px;
+      font-size: 14px; font-weight: 600; color: rgba(220,240,255,0.92);
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      transition: background 0.2s, border-color 0.2s; white-space: nowrap;
     }
-    .submit-btn:hover { background: rgba(160,205,255,0.24); border-color: rgba(180,215,255,0.50); }
-    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .helper-text {
-      margin-top: 10px;
-      font-size: 13px;
-      color: rgba(200,225,255,0.48);
-      line-height: 1.5;
-    }
-    .status-msg {
-      margin-top: 8px;
-      min-height: 18px;
-      font-size: 13px;
-      color: rgba(200,225,255,0.65);
-    }
-
-    /* ── Wall ── */
+    .post-btn:hover { background: rgba(160,205,255,0.24); border-color: rgba(180,215,255,0.50); }
+    .post-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .helper-text { margin-top: 10px; font-size: 13px; color: rgba(200,225,255,0.42); line-height: 1.5; }
+    .wall-status { margin-top: 8px; min-height: 18px; font-size: 13px; color: rgba(200,225,255,0.65); }
     .wall-header {
       display: flex; justify-content: space-between; align-items: baseline;
       margin-bottom: 14px; flex-wrap: wrap; gap: 8px;
     }
-    .wall-title {
+    .wall-label {
       font-family: 'Cormorant Garamond', serif;
       font-style: italic; font-weight: 500;
-      font-size: clamp(18px, 3vw, 24px);
-      color: rgba(220,240,255,0.90);
+      font-size: clamp(18px, 3vw, 24px); color: rgba(220,240,255,0.88);
     }
-    .wall-count {
-      font-size: 12px;
-      color: rgba(200,225,255,0.45);
-    }
-
+    .wall-count { font-size: 12px; color: rgba(200,225,255,0.42); }
     .entries { display: grid; gap: 10px; }
-
     .entry {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px 16px;
+      background: rgba(255,255,255,0.065);
+      border: 1px solid rgba(180,215,255,0.16);
+      border-radius: 16px; padding: 14px 16px;
       display: flex; justify-content: space-between; align-items: center; gap: 16px;
       transition: border-color 0.3s;
     }
     .entry:hover { border-color: rgba(180,215,255,0.28); }
     .entry-body { flex: 1; min-width: 0; }
-    .entry-prefix {
-      font-size: 11px; color: rgba(190,220,255,0.40);
-      text-transform: uppercase; letter-spacing: 1px;
-      margin-bottom: 3px;
-    }
-    .entry-text {
-      font-size: 16px; font-weight: 500;
-      color: rgba(225,242,255,0.90);
-      word-break: break-word;
-      line-height: 1.35;
-    }
-    .entry-meta {
-      margin-top: 5px;
-      font-size: 12px; color: rgba(190,220,255,0.42);
-    }
+    .entry-prefix { font-size: 10px; color: rgba(190,220,255,0.38); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
+    .entry-text { font-size: 16px; font-weight: 500; color: rgba(225,242,255,0.90); word-break: break-word; line-height: 1.35; }
+    .entry-meta { margin-top: 5px; font-size: 12px; color: rgba(190,220,255,0.40); }
     .like-btn {
       flex: 0 0 auto;
       background: rgba(255,255,255,0.07);
       border: 1px solid rgba(180,215,255,0.20);
-      border-radius: 999px;
-      padding: 8px 16px;
-      font-size: 13px; font-weight: 600;
-      color: rgba(210,235,255,0.75);
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      transition: background 0.2s, border-color 0.2s, color 0.2s;
-      white-space: nowrap;
+      border-radius: 999px; padding: 8px 16px;
+      font-size: 13px; font-weight: 600; color: rgba(210,235,255,0.75);
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      transition: background 0.2s, border-color 0.2s, color 0.2s; white-space: nowrap;
     }
-    .like-btn:hover:not(:disabled) {
-      background: rgba(160,205,255,0.16);
-      border-color: rgba(180,215,255,0.40);
-      color: rgba(220,242,255,0.95);
-    }
-    .like-btn:disabled { opacity: 0.45; cursor: not-allowed; }
-    .like-btn.liked {
-      background: rgba(160,205,255,0.14);
-      border-color: rgba(180,215,255,0.38);
-      color: rgba(210,240,255,0.88);
-    }
-
+    .like-btn:hover:not(:disabled) { background: rgba(160,205,255,0.18); border-color: rgba(180,215,255,0.42); color: rgba(220,242,255,0.95); }
+    .like-btn:disabled { opacity: 0.42; cursor: not-allowed; }
+    .like-btn.liked { background: rgba(160,205,255,0.16); border-color: rgba(180,215,255,0.40); color: rgba(210,240,255,0.90); }
     .empty-state {
-      background: var(--card);
-      border: 1px dashed rgba(180,215,255,0.18);
-      border-radius: var(--radius);
-      padding: 28px;
-      text-align: center;
-      color: rgba(200,225,255,0.45);
-      font-size: 14px;
-      line-height: 1.6;
+      background: rgba(255,255,255,0.055);
+      border: 1px dashed rgba(180,215,255,0.16);
+      border-radius: 16px; padding: 28px; text-align: center;
+      color: rgba(200,225,255,0.42); font-size: 14px; line-height: 1.6;
     }
 
-    @media (max-width: 500px) {
+    @media (max-width: 480px) {
       .entry-input { padding-left: 148px; }
       .prefix-label { font-size: 13px; }
     }
   </style>
 </head>
 <body>
-<div class="wrap">
 
+<!-- GAME -->
+<div class="game-section">
   <div class="top-bar">
     <div class="badge">✦ One thing at a time</div>
-    <div class="tag">#RiseFor65</div>
+    <div class="hashtag">#RiseFor65</div>
   </div>
-
-  <div class="hero">
-    <div class="hero-title">What will you<br>do with one focus?</div>
-    <div class="hero-sub">Unitasking — giving one thing your full, undivided attention — is one of the most peaceful habits you can build. What's one activity you'd like to bring your whole self to?</div>
-    <div class="hero-rule"></div>
+  <div class="center-copy">
+    <div class="game-title">Follow the light</div>
+    <div class="game-sub">Press gently and trace the path from left to right. There's no rush — focus is not force, it's flow.</div>
   </div>
+  <div class="canvas-wrap" id="cwrap">
+    <canvas id="c"></canvas>
+    <div class="finish-overlay" id="finish">
+      <div class="finish-title">You found<br>the stillness.</div>
+      <div class="finish-sub">That's what focus feels like — not effort, but ease.</div>
+      <button class="finish-cta" onclick="document.querySelector('.wall-section').scrollIntoView({behavior:'smooth'})">
+        Share what you'll focus on ↓
+      </button>
+    </div>
+  </div>
+  <div class="ui-bottom">
+    <div class="prog-pill" id="prog">0%</div>
+    <div class="status-msg" id="gameStatus">Touch and trace gently from left to right</div>
+    <div class="prog-pill" style="opacity:0;pointer-events:none;">0%</div>
+  </div>
+</div>
 
+<!-- WALL -->
+<div class="wall-section">
+  <div class="wall-hero">
+    <div class="wall-hero-title">What will you give<br>your full attention to?</div>
+    <div class="wall-hero-sub">Unitasking — one thing, wholly — is one of the most peaceful choices you can make. Share yours, and see what others are focusing on.</div>
+  </div>
   <div class="submit-card">
-    <div class="submit-label">Share yours</div>
     <div class="input-row">
       <div class="prefix-wrap">
         <span class="prefix-label">I will unitask on</span>
         <input class="entry-input" id="entryInput" type="text" maxlength="100"
           placeholder="reading, cooking, a walk…" autocomplete="off" />
       </div>
-      <button class="submit-btn" id="submitBtn">Post</button>
+      <button class="post-btn" id="submitBtn">Post</button>
     </div>
-    <div class="helper-text">Type what you'd like to give your full attention to, then press Post. If someone else said it first, give them a +1.</div>
-    <div class="status-msg" id="status"></div>
+    <div class="helper-text">Share one thing you'll give your whole attention to. If someone already said yours, give them a +1.</div>
+    <div class="wall-status" id="wallStatus"></div>
   </div>
-
   <div class="wall-header">
-    <div class="wall-title">What everyone is unitasking on</div>
+    <div class="wall-label">What everyone is focusing on</div>
     <div class="wall-count" id="countText">Loading…</div>
   </div>
-
   <div class="entries" id="entries"></div>
-
 </div>
+
 <script>
-  const POLL_ID   = 'risefor65-focus-wall-v1';
-  const API_URL   = `/api/focus-wall?poll=${encodeURIComponent(POLL_ID)}`;
-  const LIKED_KEY = `${POLL_ID}-liked`;
-
-  const inputEl   = document.getElementById('entryInput');
-  const submitBtn = document.getElementById('submitBtn');
-  const entriesEl = document.getElementById('entries');
-  const countEl   = document.getElementById('countText');
-  const statusEl  = document.getElementById('status');
-
-  let entries     = [];
-  let likedMap    = JSON.parse(localStorage.getItem(LIKED_KEY) || '{}');
-  let busy        = false;
-
-  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
-  function timeAgo(ts){
-    if(!ts) return 'just now';
-    const d = Date.now() - ts;
-    const m = Math.floor(d/60000);
-    if(m<1) return 'just now';
-    if(m<60) return `${m}m ago`;
-    const h = Math.floor(m/60);
-    if(h<24) return `${h}h ago`;
-    return `${Math.floor(h/24)}d ago`;
+/* ── GAME ── */
+(function(){
+  const canvas=document.getElementById('c');
+  const ctx=canvas.getContext('2d');
+  const statusEl=document.getElementById('gameStatus');
+  const progEl=document.getElementById('prog');
+  const finishEl=document.getElementById('finish');
+  let w=0,h=0,dpr=1,t=0;
+  let pointerDown=false,pointer={x:0,y:0};
+  let progress=0,completed=false,holdStarted=false,distractionAlpha=1.0;
+  const SEEDS=[[0.20,0.28],[0.80,0.30],[0.18,0.72],[0.78,0.68],[0.50,0.18],[0.50,0.82]];
+  const LABELS=['Notifications','Next task','Email','What if…','Scroll','Overthinking'];
+  function resize(){
+    dpr=Math.max(1,window.devicePixelRatio||1);
+    const wrap=document.getElementById('cwrap');
+    w=wrap.clientWidth; h=wrap.clientHeight;
+    canvas.style.width=w+'px'; canvas.style.height=h+'px';
+    canvas.width=Math.floor(w*dpr); canvas.height=Math.floor(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
   }
-
-  function totalResponses(){
-    return entries.reduce((s,e) => s + Number(e.count||0), 0);
+  window.addEventListener('resize',resize); resize();
+  function lerp(a,b,n){return a+(b-a)*n;}
+  function pathY(x,tt){
+    const left=w*0.08,right=w*0.92,nx=(x-left)/(right-left);
+    return h*0.56+Math.sin(tt*0.00045)*8+Math.sin(nx*Math.PI*2.2+tt*0.00055)*Math.min(38,h*0.07);
   }
-
-  function render(){
-    const unique    = entries.length;
-    const responses = totalResponses();
-    countEl.textContent = `${responses} ${responses===1?'response':'responses'} · ${unique} unique`;
-
-    if(!entries.length){
-      entriesEl.innerHTML = `<div class="empty-state">Be the first to share what you'll give your full attention to.</div>`;
-      return;
+  function pathPt(p,tt){const x=lerp(w*0.08,w*0.92,p);return{x,y:pathY(x,tt)};}
+  function drawPath(tt){
+    const left=w*0.08,right=w*0.92,N=100;
+    ctx.save();ctx.lineCap='round';ctx.lineJoin='round';
+    ctx.beginPath();for(let i=0;i<=N;i++){const x=lerp(left,right,i/N);i===0?ctx.moveTo(x,pathY(x,tt)):ctx.lineTo(x,pathY(x,tt));}
+    ctx.strokeStyle='rgba(140,200,255,0.10)';ctx.lineWidth=32;ctx.stroke();
+    ctx.beginPath();for(let i=0;i<=N;i++){const x=lerp(left,right,i/N);i===0?ctx.moveTo(x,pathY(x,tt)):ctx.lineTo(x,pathY(x,tt));}
+    ctx.strokeStyle='rgba(170,220,255,0.22)';ctx.lineWidth=12;ctx.stroke();
+    if(progress>0.005){
+      ctx.beginPath();const end=Math.floor(N*progress);
+      for(let i=0;i<=end;i++){const x=lerp(left,right,i/N);i===0?ctx.moveTo(x,pathY(x,tt)):ctx.lineTo(x,pathY(x,tt));}
+      const grd=ctx.createLinearGradient(left,0,lerp(left,right,progress),0);
+      grd.addColorStop(0,'rgba(180,225,255,0.55)');grd.addColorStop(1,'rgba(220,245,255,0.92)');
+      ctx.strokeStyle=grd;ctx.lineWidth=7;ctx.stroke();
     }
-
-    const sorted = entries.slice().sort((a,b) =>
-      (Number(b.count||0) - Number(a.count||0)) ||
-      ((b.updatedAt||0) - (a.updatedAt||0))
-    );
-
-    entriesEl.innerHTML = sorted.map(e => {
-      const alreadyLiked = !!likedMap[e.id];
-      return `
-        <div class="entry">
-          <div class="entry-body">
-            <div class="entry-prefix">Unitasking on</div>
-            <div class="entry-text">${esc(e.text||'')}</div>
-            <div class="entry-meta">${e.count||0} ${Number(e.count)===1?'person':'people'} · ${timeAgo(e.updatedAt||e.createdAt)}</div>
-          </div>
-          <button type="button" class="like-btn${alreadyLiked?' liked':''}"
-            data-id="${e.id}" ${alreadyLiked?'disabled':''}>
-            +1
-          </button>
-        </div>`;
-    }).join('');
-
-    entriesEl.querySelectorAll('.like-btn').forEach(btn => {
-      btn.addEventListener('click', () => plusOne(btn.dataset.id));
+    ctx.restore();
+  }
+  function drawLabels(tt){
+    const pt=pathPt(0,tt),pe=pathPt(1,tt);
+    function chip(x,y,label){
+      ctx.save();ctx.font='500 11px "DM Sans",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+      const tw=ctx.measureText(label).width,bw=tw+22,bh=26;
+      ctx.fillStyle='rgba(255,255,255,0.07)';ctx.strokeStyle='rgba(180,215,255,0.18)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.roundRect(x-bw/2,y-bh/2,bw,bh,13);ctx.fill();ctx.stroke();
+      ctx.fillStyle='rgba(210,235,255,0.52)';ctx.fillText(label,x,y+0.5);ctx.restore();
+    }
+    chip(pt.x,pt.y-32,'Start here');chip(pe.x,pe.y-32,'Finish');
+  }
+  function drawDistractions(tt,alpha){
+    if(alpha<=0.01)return;
+    ctx.save();ctx.font='500 11px "DM Sans",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    LABELS.forEach((label,i)=>{
+      const s=SEEDS[i],x=w*s[0]+Math.sin(tt*0.0006+i)*14,y=h*s[1]+Math.cos(tt*0.00055+i*0.7)*10;
+      const tw=ctx.measureText(label).width,bw=tw+22,bh=28,fa=alpha*0.20;
+      ctx.fillStyle=`rgba(255,255,255,${fa})`;ctx.strokeStyle=`rgba(180,215,255,${fa*1.4})`;ctx.lineWidth=1;
+      ctx.beginPath();ctx.roundRect(x-bw/2,y-bh/2,bw,bh,14);ctx.fill();ctx.stroke();
+      ctx.fillStyle=`rgba(210,232,255,${alpha*0.42})`;ctx.fillText(label,x,y+0.5);
     });
+    ctx.restore();
   }
+  function drawTracer(tt){
+    const p=pathPt(progress,tt),pulse=0.5+0.5*Math.sin(tt*0.004);
+    ctx.save();
+    ctx.beginPath();ctx.arc(p.x,p.y,16+pulse*4,0,Math.PI*2);ctx.fillStyle=`rgba(180,225,255,${0.06+pulse*0.04})`;ctx.fill();
+    ctx.beginPath();ctx.arc(p.x,p.y,9,0,Math.PI*2);ctx.fillStyle='rgba(230,248,255,0.96)';ctx.fill();
+    ctx.restore();
+  }
+  function drawPointer(){
+    if(!pointerDown)return;
+    ctx.save();ctx.beginPath();ctx.arc(pointer.x,pointer.y,6,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,0.6)';ctx.fill();ctx.restore();
+  }
+  function update(dt){
+    if(completed){distractionAlpha=Math.max(0,distractionAlpha-dt*0.0018);return;}
+    const target=pathPt(progress,t),dist=Math.hypot(pointer.x-target.x,pointer.y-target.y),tol=Math.max(36,w*0.042);
+    if(pointerDown){
+      holdStarted=true;
+      if(dist<tol){progress+=0.0013*dt;statusEl.textContent='Breathe and stay with it…';statusEl.style.color='rgba(200,235,255,0.75)';}
+      else{progress-=0.0006*dt;statusEl.textContent='Drift back gently to the light';statusEl.style.color='rgba(210,220,255,0.60)';}
+    }else{
+      if(holdStarted){statusEl.textContent='Touch and continue the path';statusEl.style.color='rgba(200,225,255,0.62)';}
+      progress-=0.00028*dt;
+    }
+    progress=Math.max(0,Math.min(1,progress));
+    progEl.textContent=Math.round(progress*100)+'%';
+    distractionAlpha=Math.max(0.05,1-progress*1.1);
+    if(progress>=1){
+      completed=true;statusEl.textContent='You made it — rest here a moment.';statusEl.style.color='rgba(220,242,255,0.88)';progEl.textContent='100%';
+      setTimeout(()=>finishEl.classList.add('show'),600);
+    }
+  }
+  let last=performance.now();
+  function loop(now){const dt=Math.min(32,now-last);last=now;t=now;update(dt);ctx.clearRect(0,0,w,h);drawDistractions(now,distractionAlpha);drawPath(now);drawLabels(now);drawTracer(now);drawPointer();requestAnimationFrame(loop);}
+  requestAnimationFrame(loop);
+  function setPtr(e){const rect=canvas.getBoundingClientRect(),src=e.touches?e.touches[0]:e;pointer.x=src.clientX-rect.left;pointer.y=src.clientY-rect.top;}
+  canvas.addEventListener('pointerdown',e=>{pointerDown=true;setPtr(e);canvas.setPointerCapture(e.pointerId);});
+  canvas.addEventListener('pointermove',e=>{setPtr(e);});
+  canvas.addEventListener('pointerup',()=>{pointerDown=false;});
+  canvas.addEventListener('pointercancel',()=>{pointerDown=false;});
+  canvas.addEventListener('touchstart',e=>{pointerDown=true;setPtr(e);},{passive:true});
+  canvas.addEventListener('touchmove',e=>{setPtr(e);},{passive:true});
+  canvas.addEventListener('touchend',()=>{pointerDown=false;},{passive:true});
+})();
 
+/* ── WALL ── */
+(function(){
+  const POLL_ID='risefor65-focus-wall-v1';
+  const API_URL=`/api/focus-wall?poll=${encodeURIComponent(POLL_ID)}`;
+  const LIKED_KEY=`${POLL_ID}-liked`;
+  const inputEl=document.getElementById('entryInput');
+  const submitBtn=document.getElementById('submitBtn');
+  const entriesEl=document.getElementById('entries');
+  const countEl=document.getElementById('countText');
+  const statusEl=document.getElementById('wallStatus');
+  let entries=[],likedMap=JSON.parse(localStorage.getItem(LIKED_KEY)||'{}'),busy=false;
+  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function timeAgo(ts){
+    if(!ts)return 'just now';const d=Date.now()-ts,m=Math.floor(d/60000);
+    if(m<1)return 'just now';if(m<60)return `${m}m ago`;const h=Math.floor(m/60);
+    if(h<24)return `${h}h ago`;return `${Math.floor(h/24)}d ago`;
+  }
+  function render(){
+    const unique=entries.length,responses=entries.reduce((s,e)=>s+Number(e.count||0),0);
+    countEl.textContent=`${responses} ${responses===1?'response':'responses'} · ${unique} unique`;
+    if(!entries.length){entriesEl.innerHTML='<div class="empty-state">Be the first to share what you\'ll give your full attention to.</div>';return;}
+    const sorted=entries.slice().sort((a,b)=>(Number(b.count||0)-Number(a.count||0))||((b.updatedAt||0)-(a.updatedAt||0)));
+    entriesEl.innerHTML=sorted.map(e=>{
+      const liked=!!likedMap[e.id];
+      return `<div class="entry"><div class="entry-body"><div class="entry-prefix">Unitasking on</div><div class="entry-text">${esc(e.text||'')}</div><div class="entry-meta">${e.count||0} ${Number(e.count)===1?'person':'people'} · ${timeAgo(e.updatedAt||e.createdAt)}</div></div><button type="button" class="like-btn${liked?' liked':''}" data-id="${e.id}" ${liked?'disabled':''}>+1</button></div>`;
+    }).join('');
+    entriesEl.querySelectorAll('.like-btn').forEach(btn=>{btn.addEventListener('click',()=>plusOne(btn.dataset.id));});
+  }
   async function load(showLoading){
-    if(showLoading) countEl.textContent = 'Loading…';
-    try {
-      const res  = await fetch(API_URL, { cache: 'no-store' });
-      if(!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      entries = Array.isArray(data.entries) ? data.entries : [];
-      render();
-    } catch(err){
-      console.error(err);
-      if(showLoading) countEl.textContent = 'Could not load — try refreshing';
-    }
+    if(showLoading)countEl.textContent='Loading…';
+    try{const res=await fetch(API_URL,{cache:'no-store'});if(!res.ok)throw new Error(`HTTP ${res.status}`);const data=await res.json();entries=Array.isArray(data.entries)?data.entries:[];render();}
+    catch(err){console.error(err);if(showLoading)countEl.textContent='Could not load — try refreshing';}
   }
-
   async function submit(){
-    const text = inputEl.value.trim();
-    if(!text || busy) return;
-    busy = true; submitBtn.disabled = true; statusEl.textContent = 'Posting…';
-    try {
-      const res  = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'add', text })
-      });
-      if(!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      entries = Array.isArray(data.entries) ? data.entries : [];
-      inputEl.value = '';
-      statusEl.textContent = 'Posted ✓';
-      render();
-    } catch(err){
-      console.error(err);
-      statusEl.textContent = 'Could not post right now — please try again.';
-    } finally {
-      busy = false; submitBtn.disabled = false;
-      setTimeout(() => { if(statusEl.textContent === 'Posted ✓') statusEl.textContent = ''; }, 2000);
-    }
+    const text=inputEl.value.trim();if(!text||busy)return;
+    busy=true;submitBtn.disabled=true;statusEl.textContent='Posting…';
+    try{
+      const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'add',text})});
+      if(!res.ok)throw new Error(`HTTP ${res.status}`);const data=await res.json();
+      entries=Array.isArray(data.entries)?data.entries:[];inputEl.value='';statusEl.textContent='Posted ✓';render();
+    }catch(err){console.error(err);statusEl.textContent='Could not post right now — please try again.';}
+    finally{busy=false;submitBtn.disabled=false;setTimeout(()=>{if(statusEl.textContent==='Posted ✓')statusEl.textContent='';},2000);}
   }
-
   async function plusOne(id){
-    if(likedMap[id] || busy) return;
-    likedMap[id] = true;
-    localStorage.setItem(LIKED_KEY, JSON.stringify(likedMap));
-    render();
-    try {
-      const res  = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'like', id })
-      });
-      if(!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      entries = Array.isArray(data.entries) ? data.entries : entries;
-      render();
-    } catch(err){
-      console.error(err);
-      delete likedMap[id];
-      localStorage.setItem(LIKED_KEY, JSON.stringify(likedMap));
-      render();
-    }
+    if(likedMap[id]||busy)return;
+    likedMap[id]=true;localStorage.setItem(LIKED_KEY,JSON.stringify(likedMap));render();
+    try{
+      const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'like',id})});
+      if(!res.ok)throw new Error(`HTTP ${res.status}`);const data=await res.json();
+      entries=Array.isArray(data.entries)?data.entries:entries;render();
+    }catch(err){console.error(err);delete likedMap[id];localStorage.setItem(LIKED_KEY,JSON.stringify(likedMap));render();}
   }
-
-  submitBtn.addEventListener('click', submit);
-  inputEl.addEventListener('keydown', e => { if(e.key === 'Enter') submit(); });
-
-  load(true);
-  setInterval(() => load(false), 10000);
+  submitBtn.addEventListener('click',submit);
+  inputEl.addEventListener('keydown',e=>{if(e.key==='Enter')submit();});
+  load(true);setInterval(()=>load(false),10000);
+})();
 </script>
 </body>
 </html>
