@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>#RiseFor65 — Ride the Wave</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{
+      background:
+        radial-gradient(ellipse at 20% 30%,rgba(200,230,255,.18) 0%,transparent 55%),
+        radial-gradient(ellipse at 80% 20%,rgba(190,210,255,.14) 0%,transparent 50%),
+        linear-gradient(160deg,#18213e 0%,#1e2e55 40%,#1c2848 70%,#18213e 100%);
+      color:#e8f4ff;font-family:'DM Sans',system-ui,sans-serif;overflow-x:hidden;
+    }
+    .game-section{width:100%;padding-bottom:4px}
+    .top-bar{padding:14px 18px 0;display:flex;justify-content:space-between;align-items:center}
+    .badge{background:rgba(255,255,255,.07);border:1px solid rgba(180,215,255,.18);border-radius:999px;padding:6px 13px;font-size:10px;font-weight:600;letter-spacing:1.3px;text-transform:uppercase;color:rgba(220,238,255,.85)}
+    .hashtag{font-size:11px;color:rgba(200,225,255,.38)}
+    .center-copy{text-align:center;padding:10px 18px 6px}
+    .game-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:clamp(22px,5vw,40px);line-height:1.05;color:#eef7ff;letter-spacing:-.5px}
+    .game-sub{margin-top:5px;font-size:13px;line-height:1.55;color:rgba(210,232,255,.62);max-width:440px;margin-left:auto;margin-right:auto}
+    .breath-key{display:flex;justify-content:center;gap:16px;margin-top:6px}
+    .bki{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(200,225,255,.50)}
+    .swatch{width:20px;height:3px;border-radius:999px}
+    .canvas-wrap{position:relative;width:100%;height:210px}
+    @media(min-height:700px){.canvas-wrap{height:240px}}
+    canvas{position:absolute;top:0;left:0;width:100%;height:100%;display:block;touch-action:none;cursor:pointer}
+    .finish-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(18,27,52,0);pointer-events:none;opacity:0;transition:opacity 1.4s ease,background 1.4s ease;z-index:20;text-align:center;padding:20px}
+    .finish-overlay.show{opacity:1;pointer-events:all;background:rgba(18,27,52,.78)}
+    .finish-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:clamp(24px,5vw,40px);line-height:1.1;color:#eef7ff}
+    .finish-sub{font-size:13px;line-height:1.6;color:rgba(220,240,255,.78);max-width:360px}
+    .finish-cta{margin-top:6px;background:rgba(160,205,255,.14);border:1px solid rgba(180,215,255,.30);border-radius:999px;padding:10px 22px;font-size:13px;font-weight:600;color:rgba(220,240,255,.90);cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s}
+    .finish-cta:hover{background:rgba(160,205,255,.26)}
+    .ui-bottom{padding:5px 18px 8px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+    .breath-word{font-size:12px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;min-width:52px;transition:color .4s ease;color:rgba(160,220,255,.75)}
+    .timer-wrap{flex:1;display:flex;justify-content:center;align-items:center}
+    .timer-svg{width:36px;height:36px;display:block;overflow:visible}
+    .t-track{fill:none;stroke:rgba(180,215,255,.12);stroke-width:2.5}
+    .t-arc{fill:none;stroke-width:2.5;stroke-linecap:round}
+    .t-num{font-size:10px;font-weight:600;fill:rgba(210,235,255,.52);text-anchor:middle;dominant-baseline:central}
+    .prog{background:rgba(255,255,255,.07);border:1px solid rgba(180,215,255,.16);border-radius:999px;padding:5px 10px;font-size:10px;font-weight:600;letter-spacing:1.1px;text-transform:uppercase;color:rgba(210,232,255,.50);min-width:42px;text-align:center}
+
+    /* wall */
+    .wall-section{width:100%;max-width:680px;margin:0 auto;padding:22px 18px 48px;border-top:1px solid rgba(180,215,255,.10)}
+    .wall-hero{text-align:center;margin-bottom:18px}
+    .wall-hero-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:clamp(20px,3.5vw,30px);color:rgba(220,240,255,.92);line-height:1.1}
+    .wall-hero-sub{margin-top:5px;font-size:13px;line-height:1.55;color:rgba(200,225,255,.46);max-width:440px;margin-left:auto;margin-right:auto}
+    .submit-card{background:rgba(255,255,255,.065);border:1px solid rgba(180,215,255,.16);border-radius:14px;padding:14px;margin-bottom:18px}
+    .input-row{display:flex;gap:8px;flex-wrap:wrap}
+    .prefix-wrap{position:relative;flex:1 1 220px}
+    .prefix-label{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:13px;color:rgba(200,225,255,.40);pointer-events:none;white-space:nowrap}
+    .entry-input{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(180,215,255,.22);border-radius:10px;padding:12px 12px 12px 175px;font-size:14px;font-family:'DM Sans',sans-serif;color:#e8f4ff;outline:none;transition:border-color .3s}
+    .entry-input::placeholder{color:rgba(200,225,255,.25)}
+    .entry-input:focus{border-color:rgba(180,215,255,.44)}
+    .post-btn{background:rgba(160,205,255,.14);border:1px solid rgba(180,215,255,.28);border-radius:10px;padding:12px 18px;font-size:13px;font-weight:600;color:rgba(220,240,255,.92);cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s;white-space:nowrap}
+    .post-btn:hover{background:rgba(160,205,255,.22)}
+    .post-btn:disabled{opacity:.5;cursor:not-allowed}
+    .helper-text{margin-top:8px;font-size:12px;color:rgba(200,225,255,.38);line-height:1.5}
+    .wall-status{margin-top:5px;min-height:15px;font-size:12px;color:rgba(200,225,255,.60)}
+    .wall-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:11px;flex-wrap:wrap;gap:5px}
+    .wall-label{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:clamp(16px,2.8vw,22px);color:rgba(220,240,255,.88)}
+    .wall-count{font-size:11px;color:rgba(200,225,255,.38)}
+    .entries{display:grid;gap:8px}
+    .entry{background:rgba(255,255,255,.065);border:1px solid rgba(180,215,255,.15);border-radius:13px;padding:11px 13px;display:flex;justify-content:space-between;align-items:center;gap:12px;transition:border-color .3s}
+    .entry:hover{border-color:rgba(180,215,255,.26)}
+    .entry-body{flex:1;min-width:0}
+    .entry-prefix{font-size:10px;color:rgba(190,220,255,.34);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+    .entry-text{font-size:14px;font-weight:500;color:rgba(225,242,255,.90);word-break:break-word;line-height:1.3}
+    .entry-meta{margin-top:3px;font-size:11px;color:rgba(190,220,255,.36)}
+    .like-btn{flex:0 0 auto;background:rgba(255,255,255,.07);border:1px solid rgba(180,215,255,.18);border-radius:999px;padding:6px 13px;font-size:12px;font-weight:600;color:rgba(210,235,255,.70);cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s,color .2s;white-space:nowrap}
+    .like-btn:hover:not(:disabled){background:rgba(160,205,255,.16);color:rgba(220,242,255,.95)}
+    .like-btn:disabled{opacity:.38;cursor:not-allowed}
+    .like-btn.liked{background:rgba(160,205,255,.14);border-color:rgba(180,215,255,.35);color:rgba(210,240,255,.86)}
+    .empty-state{background:rgba(255,255,255,.05);border:1px dashed rgba(180,215,255,.14);border-radius:13px;padding:22px;text-align:center;color:rgba(200,225,255,.38);font-size:13px;line-height:1.6}
+    @media(max-width:420px){.entry-input{padding-left:138px}.prefix-label{font-size:12px}}
+  </style>
+</head>
+<body>
+<div class="game-section">
+  <div class="top-bar">
+    <div class="badge">✦ Ride the wave of your breath</div>
+    <div class="hashtag">#RiseFor65</div>
+  </div>
+  <div class="center-copy">
+    <div class="game-title">Follow only your breath</div>
+    <div class="game-sub">Trace the wave slowly with your finger. Inhale as it rises, exhale as it falls. Let your breath set the pace — and watch the distractions disappear.</div>
+    <div class="breath-key">
+      <div class="bki"><div class="swatch" style="background:rgba(160,220,255,.70)"></div>Inhale — rise</div>
+      <div class="bki"><div class="swatch" style="background:rgba(175,195,255,.42)"></div>Exhale — fall</div>
+    </div>
+  </div>
+  <div class="canvas-wrap" id="cwrap">
+    <canvas id="c"></canvas>
+    <div class="finish-overlay" id="finish">
+      <div class="finish-title">Still. Clear.<br>Just breathing.</div>
+      <div class="finish-sub">When we stay with one thing — our breath — the rest falls quiet on its own.</div>
+      <button class="finish-cta" onclick="document.querySelector('.wall-section').scrollIntoView({behavior:'smooth'})">Share what you'll focus on ↓</button>
+    </div>
+  </div>
+  <div class="ui-bottom">
+    <div class="breath-word" id="breathWord">—</div>
+    <div class="timer-wrap">
+      <svg class="timer-svg" viewBox="0 0 36 36">
+        <circle class="t-track" cx="18" cy="18" r="15"/>
+        <circle class="t-arc" cx="18" cy="18" r="15" id="tArc"
+          stroke="rgba(160,220,255,.70)" stroke-dasharray="94.25" stroke-dashoffset="94.25"
+          transform="rotate(-90 18 18)"/>
+        <text class="t-num" x="18" y="18" id="tNum">—</text>
+      </svg>
+    </div>
+    <div class="prog" id="prog">0%</div>
+  </div>
+</div>
+
+<div class="wall-section">
+  <div class="wall-hero">
+    <div class="wall-hero-title">What will you give your full attention to?</div>
+    <div class="wall-hero-sub">Unitasking — one thing, wholly — is one of the most peaceful choices you can make. Share yours and see what others are focusing on.</div>
+  </div>
+  <div class="submit-card">
+    <div class="input-row">
+      <div class="prefix-wrap">
+        <span class="prefix-label">I will unitask on</span>
+        <input class="entry-input" id="entryInput" type="text" maxlength="100" placeholder="reading, cooking, a walk…" autocomplete="off"/>
+      </div>
+      <button class="post-btn" id="submitBtn">Post</button>
+    </div>
+    <div class="helper-text">Share one thing you'll give your whole attention to. If someone already said yours, give them a +1.</div>
+    <div class="wall-status" id="wallStatus"></div>
+  </div>
+  <div class="wall-header">
+    <div class="wall-label">What everyone is focusing on</div>
+    <div class="wall-count" id="countText">Loading…</div>
+  </div>
+  <div class="entries" id="entries"></div>
+</div>
+
+<script>
+(function(){
+  var canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+  var finishEl=document.getElementById('finish'),breathWord=document.getElementById('breathWord');
+  var progEl=document.getElementById('prog'),tArc=document.getElementById('tArc'),tNum=document.getElementById('tNum');
+  var W=0,H=0,DPR=1,T=0;
+  var pointerDown=false,ptr={x:0,y:0};
+  var progress=0,completed=false,started=false,particles=[];
+
+  // ── Pace: one full breath cycle (in+out) takes 8s across the full wave width
+  // 2 cycles total → total journey ≈ 16 s at natural pace
+  // But we don't force pace — user moves finger; arc reflects their actual breath direction
+  var BREATH_SECS=5; // seconds for one half-breath (in or out)
+  var CIRC=2*Math.PI*15; // 94.25
+  var breathPhase=0; // 0..1 within current half-breath
+
+  var CYCLES=2,DRIFT=0.00016;
+  function pathY(nx,t){
+    var amp=Math.min(H*.30,72),base=H*.50;
+    return base-Math.sin(nx*Math.PI*2*CYCLES)*amp+Math.sin(t*DRIFT)*(H*.028);
+  }
+  function wx(nx){return W*.06+nx*(W*.88);}
+  function ptAt(p){return{x:wx(p),y:pathY(p,T)};}
+  function rising(p){
+    var e=.006;
+    return pathY(Math.min(1,p+e),T)<pathY(Math.max(0,p-e),T);
+  }
+
+  function initCanvas(){
+    DPR=Math.max(1,devicePixelRatio||1);
+    var wr=document.getElementById('cwrap');
+    W=wr.offsetWidth;H=wr.offsetHeight;
+    canvas.width=Math.round(W*DPR);canvas.height=Math.round(H*DPR);
+    canvas.style.width=W+'px';canvas.style.height=H+'px';
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+  }
+  window.addEventListener('resize',function(){requestAnimationFrame(initCanvas);});
+  requestAnimationFrame(initCanvas);
+
+  // Smooth curve helper
+  function curve(pts,endIdx){
+    ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);
+    for(var i=0;i<endIdx;i++){
+      var m={(x:(pts[i].x+pts[i+1].x)/2,y:(pts[i].y+pts[i+1].y)/2)};
+      ctx.quadraticCurveTo(pts[i].x,pts[i].y,m.x,m.y);
+    }
+    ctx.lineTo(pts[endIdx].x,pts[endIdx].y);
+  }
+
+  function buildPts(N){
+    var pts=[];for(var i=0;i<=N;i++)pts.push({x:wx(i/N),y:pathY(i/N,T)});return pts;
+  }
+
+  function drawPath(){
+    var N=80,pts=buildPts(N);
+    ctx.save();ctx.lineCap='round';ctx.lineJoin='round';
+    // halo
+    curve(pts,N);ctx.strokeStyle='rgba(140,200,255,.07)';ctx.lineWidth=32;ctx.stroke();
+    // guide
+    curve(pts,N);ctx.strokeStyle='rgba(160,215,255,.20)';ctx.lineWidth=7;ctx.stroke();
+    // trace
+    if(progress>.002){
+      var ei=Math.min(N,Math.floor(N*progress)+1);
+      var sub=pts.slice(0,ei+1);
+      curve(sub,sub.length-1);
+      var r=rising(progress);
+      var g=ctx.createLinearGradient(wx(0),0,wx(progress),0);
+      g.addColorStop(0,r?'rgba(130,205,255,.55)':'rgba(150,178,255,.45)');
+      g.addColorStop(1,r?'rgba(205,245,255,.96)':'rgba(192,210,255,.90)');
+      ctx.strokeStyle=g;ctx.lineWidth=5;ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function drawLabels(){
+    var s=ptAt(0),e=ptAt(1);
+    function chip(x,y,lbl){
+      ctx.save();ctx.font='500 10px "DM Sans",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+      var tw=ctx.measureText(lbl).width,bw=tw+16,bh=20;
+      ctx.fillStyle='rgba(255,255,255,.07)';ctx.strokeStyle='rgba(180,215,255,.18)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.roundRect(x-bw/2,y-bh/2,bw,bh,10);ctx.fill();ctx.stroke();
+      ctx.fillStyle='rgba(210,235,255,.46)';ctx.fillText(lbl,x,y+.5);ctx.restore();
+    }
+    chip(s.x,s.y-24,'Start');chip(e.x,e.y-24,'Finish');
+  }
+
+  // ── 5 bubbles — positioned at 15%/35%/55%/75%/92% along x,
+  //    alternating top (ly≈0.13) and bottom (ly≈0.87), well clear of wave spine
+  var BDEFS=[
+    {lx:.12,ly:.13,label:'Notifications'},
+    {lx:.30,ly:.87,label:'WhatsApp'},
+    {lx:.52,ly:.13,label:'Overthinking'},
+    {lx:.72,ly:.87,label:'Work worries'},
+    {lx:.90,ly:.13,label:'Just one more thing'},
+  ];
+  var bubbles=BDEFS.map(function(b){
+    return{lx:b.lx,ly:b.ly,label:b.label,burst:false,burstT:0,burstP:0,dissolveStart:-1,seed:Math.random()*Math.PI*2};
+  });
+
+  function drawBubbles(){
+    ctx.save();ctx.font='500 10px "DM Sans",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    // tracer world-x
+    var tx=wx(progress);
+    bubbles.forEach(function(b){
+      if(b.burst&&b.burstP>=1)return;
+      var bx=W*b.lx+Math.sin(T*.00048+b.seed)*5;
+      var by=H*b.ly+Math.cos(T*.00044+b.seed)*4;
+      var tw=ctx.measureText(b.label).width,bw=tw+18,bh=24;
+      if(!b.burst){
+        // Only start dissolve when tracer x has genuinely passed the bubble x
+        var bubX=W*b.lx;
+        var alpha;
+        if(tx<bubX-4){
+          // not yet reached — full opacity (slight float-on)
+          alpha=Math.min(1,(bubX-tx)/(W*.08));
+          alpha=Math.max(.15,alpha); // always at least faintly visible until approached
+        } else {
+          // tracer has passed — fade out over 120px of further travel
+          var past=tx-bubX;
+          alpha=Math.max(0,1-past/(W*.12));
+          if(alpha===0&&!b.burst){
+            b.burst=true;b.burstT=0;b.burstP=0;
+            spawnBurst(bx,by);
+          }
+        }
+        ctx.globalAlpha=alpha;
+        ctx.fillStyle='rgba(255,255,255,.085)';ctx.strokeStyle='rgba(180,215,255,.20)';ctx.lineWidth=1;
+        ctx.beginPath();ctx.roundRect(bx-bw/2,by-bh/2,bw,bh,12);ctx.fill();ctx.stroke();
+        ctx.fillStyle='rgba(210,232,255,.52)';ctx.fillText(b.label,bx,by+.5);
+        ctx.globalAlpha=1;
+      } else {
+        // expanding ring
+        var ep=1-Math.pow(1-b.burstP,3);
+        ctx.globalAlpha=(1-ep)*.28;
+        ctx.beginPath();ctx.arc(bx,by,18+ep*38,0,Math.PI*2);
+        ctx.strokeStyle='rgba(190,230,255,.6)';ctx.lineWidth=1.5;ctx.stroke();
+        ctx.globalAlpha=1;
+      }
+    });
+    ctx.restore();
+  }
+
+  function spawnBurst(bx,by){
+    for(var i=0;i<7;i++){
+      var a=(i/7)*Math.PI*2+Math.random()*.5,s=.4+Math.random()*.9;
+      particles.push({x:bx,y:by,vx:Math.cos(a)*s,vy:Math.sin(a)*s-.25,life:1,r:1.5+Math.random()*1.8});
+    }
+  }
+
+  function updateBursts(dt){
+    bubbles.forEach(function(b){if(b.burst){b.burstT+=dt;b.burstP=Math.min(1,b.burstT/900);}});
+    particles=particles.filter(function(p){return p.life>0;});
+    particles.forEach(function(p){p.x+=p.vx*dt*.045;p.y+=p.vy*dt*.045;p.vy+=.008;p.life-=dt*.0016;});
+  }
+
+  function drawParticles(){
+    ctx.save();
+    particles.forEach(function(p){
+      ctx.globalAlpha=Math.max(0,p.life)*.55;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(205,238,255,.92)';ctx.fill();
+    });
+    ctx.globalAlpha=1;ctx.restore();
+  }
+
+  function drawTracer(){
+    var p=ptAt(progress),r=rising(progress),pulse=.5+.5*Math.sin(T*.003);
+    ctx.save();
+    ctx.beginPath();ctx.arc(p.x,p.y,13+pulse*5,0,Math.PI*2);
+    ctx.fillStyle=r?'rgba(160,220,255,'+(0.06+pulse*.05)+')':'rgba(175,195,255,'+(0.06+pulse*.05)+')';
+    ctx.fill();
+    ctx.beginPath();ctx.arc(p.x,p.y,7,0,Math.PI*2);
+    ctx.fillStyle=r?'rgba(220,248,255,.97)':'rgba(205,215,255,.92)';ctx.fill();
+    ctx.restore();
+  }
+
+  // Breath timer: advances while finger is held, resets on direction change
+  var prevRising=null;
+  function updateTimer(dt){
+    if(!started||completed)return;
+    var r=rising(progress);
+    if(r!==prevRising){breathPhase=0;prevRising=r;}
+    breathPhase=Math.min(1,breathPhase+dt/(BREATH_SECS*1000));
+    var arcFrac=r?breathPhase:(1-breathPhase);
+    tArc.setAttribute('stroke-dashoffset',(CIRC*(1-arcFrac)).toFixed(2));
+    tArc.setAttribute('stroke',r?'rgba(160,220,255,.72)':'rgba(175,195,255,.55)');
+    var left=Math.max(1,Math.ceil((1-breathPhase)*BREATH_SECS));
+    tNum.textContent=left;
+    breathWord.textContent=r?'inhale':'exhale';
+    breathWord.style.color=r?'rgba(160,220,255,.88)':'rgba(175,200,255,.75)';
+  }
+
+  function update(dt){
+    if(completed)return;
+    if(pointerDown){
+      started=true;
+      // Advance slowly — total journey at normal finger speed ≈ 16-20s
+      progress=Math.min(1,progress+.00075*dt);
+      updateTimer(dt);
+    } else {
+      if(started){
+        breathWord.textContent='—';breathWord.style.color='rgba(200,225,255,.30)';
+        tNum.textContent='—';tArc.setAttribute('stroke-dashoffset',CIRC.toFixed(2));
+      }
+    }
+    progEl.textContent=Math.round(progress*100)+'%';
+    updateBursts(dt);
+    if(progress>=1){
+      completed=true;
+      breathWord.textContent='✦';tNum.textContent='✦';
+      tArc.setAttribute('stroke-dashoffset','0');progEl.textContent='100%';
+      setTimeout(function(){finishEl.classList.add('show');},800);
+    }
+  }
+
+  var lastT=performance.now();
+  function loop(now){
+    var dt=Math.min(32,now-lastT);lastT=now;T=now;
+    update(dt);
+    ctx.clearRect(0,0,W,H);
+    drawBubbles();drawParticles();drawPath();drawLabels();drawTracer();
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+
+  function setPtr(e){var r=canvas.getBoundingClientRect(),s=e.touches?e.touches[0]:e;ptr.x=s.clientX-r.left;ptr.y=s.clientY-r.top;}
+  canvas.addEventListener('pointerdown',function(e){pointerDown=true;setPtr(e);canvas.setPointerCapture(e.pointerId);});
+  canvas.addEventListener('pointermove',function(e){setPtr(e);});
+  canvas.addEventListener('pointerup',function(){pointerDown=false;});
+  canvas.addEventListener('pointercancel',function(){pointerDown=false;});
+  canvas.addEventListener('touchstart',function(e){pointerDown=true;setPtr(e);},{passive:true});
+  canvas.addEventListener('touchmove',function(e){setPtr(e);},{passive:true});
+  canvas.addEventListener('touchend',function(){pointerDown=false;},{passive:true});
+})();
+</script>
+
+<script>
+(function(){
+  var POLL_ID='risefor65-focus-wall-v1';
+  var API_URL='/api/focus-wall?poll='+encodeURIComponent(POLL_ID);
+  var LIKED_KEY=POLL_ID+'-liked';
+  var inputEl=document.getElementById('entryInput'),submitBtn=document.getElementById('submitBtn');
+  var entriesEl=document.getElementById('entries'),countEl=document.getElementById('countText');
+  var statusEl=document.getElementById('wallStatus');
+  var entries=[],likedMap=JSON.parse(localStorage.getItem(LIKED_KEY)||'{}'),busy=false;
+  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function ago(ts){if(!ts)return'just now';var d=Date.now()-ts,m=Math.floor(d/60000);if(m<1)return'just now';if(m<60)return m+'m ago';var h=Math.floor(m/60);if(h<24)return h+'h ago';return Math.floor(h/24)+'d ago';}
+  function render(){
+    var u=entries.length,r=entries.reduce(function(s,e){return s+Number(e.count||0);},0);
+    countEl.textContent=r+' '+(r===1?'response':'responses')+' · '+u+' unique';
+    if(!entries.length){entriesEl.innerHTML='<div class="empty-state">Be the first to share what you\'ll give your full attention to.</div>';return;}
+    var sorted=entries.slice().sort(function(a,b){return(Number(b.count||0)-Number(a.count||0))||((b.updatedAt||0)-(a.updatedAt||0));});
+    entriesEl.innerHTML=sorted.map(function(e){
+      var l=!!likedMap[e.id];
+      return'<div class="entry"><div class="entry-body"><div class="entry-prefix">Unitasking on</div><div class="entry-text">'+esc(e.text||'')+'</div><div class="entry-meta">'+(e.count||0)+' '+(Number(e.count)===1?'person':'people')+' · '+ago(e.updatedAt||e.createdAt)+'</div></div><button type="button" class="like-btn'+(l?' liked':'')+'" data-id="'+e.id+'"'+(l?' disabled':'')+'>+1</button></div>';
+    }).join('');
+    entriesEl.querySelectorAll('.like-btn').forEach(function(btn){btn.addEventListener('click',function(){plusOne(btn.dataset.id);});});
+  }
+  function load(show){
+    if(show)countEl.textContent='Loading…';
+    fetch(API_URL,{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(d){entries=Array.isArray(d.entries)?d.entries:[];render();}).catch(function(e){console.error(e);if(show)countEl.textContent='Could not load — try refreshing';});
+  }
+  function submit(){
+    var text=inputEl.value.trim();if(!text||busy)return;
+    busy=true;submitBtn.disabled=true;statusEl.textContent='Posting…';
+    fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'add',text:text})}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(d){entries=Array.isArray(d.entries)?d.entries:[];inputEl.value='';statusEl.textContent='Posted ✓';render();setTimeout(function(){if(statusEl.textContent==='Posted ✓')statusEl.textContent='';},2000);}).catch(function(e){console.error(e);statusEl.textContent='Could not post — try again.';}).finally(function(){busy=false;submitBtn.disabled=false;});
+  }
+  function plusOne(id){
+    if(likedMap[id]||busy)return;
+    likedMap[id]=true;localStorage.setItem(LIKED_KEY,JSON.stringify(likedMap));render();
+    fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'like',id:id})}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(d){entries=Array.isArray(d.entries)?d.entries:entries;render();}).catch(function(e){console.error(e);delete likedMap[id];localStorage.setItem(LIKED_KEY,JSON.stringify(likedMap));render();});
+  }
+  submitBtn.addEventListener('click',submit);
+  inputEl.addEventListener('keydown',function(e){if(e.key==='Enter')submit();});
+  load(true);setInterval(function(){load(false);},10000);
+})();
+</script>
+</body>
+</html>
