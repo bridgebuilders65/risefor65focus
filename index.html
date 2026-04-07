@@ -1,256 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>#RiseFor65 — Ride the Wave</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{
       background:
-        radial-gradient(ellipse at 20% 30%, rgba(200,230,255,0.18) 0%, transparent 55%),
-        radial-gradient(ellipse at 80% 20%, rgba(190,210,255,0.14) 0%, transparent 50%),
-        radial-gradient(ellipse at 70% 80%, rgba(210,235,255,0.12) 0%, transparent 50%),
-        linear-gradient(160deg, #18213e 0%, #1e2e55 40%, #1c2848 70%, #18213e 100%);
-      color: #e8f4ff;
-      font-family: 'DM Sans', system-ui, sans-serif;
-      overflow-x: hidden;
+        radial-gradient(ellipse at 20% 30%,rgba(200,230,255,.18) 0%,transparent 55%),
+        radial-gradient(ellipse at 80% 20%,rgba(190,210,255,.14) 0%,transparent 50%),
+        linear-gradient(160deg,#18213e 0%,#1e2e55 40%,#1c2848 70%,#18213e 100%);
+      color:#e8f4ff;font-family:'DM Sans',system-ui,sans-serif;overflow-x:hidden;
     }
 
     /* ── GAME ── */
-    .game-section { width: 100%; padding-bottom: 6px; }
+    .game-section{width:100%;padding-bottom:4px}
+    .top-bar{padding:14px 18px 0;display:flex;justify-content:space-between;align-items:center}
+    .badge{background:rgba(255,255,255,.07);border:1px solid rgba(180,215,255,.18);border-radius:999px;padding:6px 13px;font-size:10px;font-weight:600;letter-spacing:1.3px;text-transform:uppercase;color:rgba(220,238,255,.85)}
+    .hashtag{font-size:11px;color:rgba(200,225,255,.38)}
+    .center-copy{text-align:center;padding:10px 18px 6px}
+    .game-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:clamp(22px,5vw,40px);line-height:1.05;color:#eef7ff;letter-spacing:-.5px}
+    .game-sub{margin-top:5px;font-size:13px;line-height:1.55;color:rgba(210,232,255,.62);max-width:420px;margin-left:auto;margin-right:auto}
+    .breath-key{display:flex;justify-content:center;gap:16px;margin-top:6px}
+    .bki{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(200,225,255,.50)}
+    .swatch{width:20px;height:3px;border-radius:999px}
 
-    .top-bar {
-      padding: 14px 18px 0;
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    .badge {
-      background: rgba(255,255,255,0.07); border: 1px solid rgba(180,215,255,0.18);
-      border-radius: 999px; padding: 6px 13px;
-      font-size: 10px; font-weight: 600; letter-spacing: 1.3px; text-transform: uppercase;
-      color: rgba(220,238,255,0.85);
-    }
-    .hashtag { font-size: 11px; color: rgba(200,225,255,0.38); }
+    /* Canvas */
+    .canvas-wrap{position:relative;width:100%;height:210px}
+    @media(min-height:700px){.canvas-wrap{height:240px}}
+    canvas{position:absolute;top:0;left:0;width:100%;height:100%;display:block}
 
-    .center-copy { text-align: center; padding: 10px 18px 6px; }
-    .game-title {
-      font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500;
-      font-size: clamp(24px, 5vw, 42px); line-height: 1.05; color: #eef7ff; letter-spacing: -0.5px;
+    /* Play button overlay */
+    .play-overlay{
+      position:absolute;inset:0;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;gap:10px;
+      z-index:10;transition:opacity .6s ease;
     }
-    .game-sub {
-      margin-top: 5px; font-size: 13px; line-height: 1.55;
-      color: rgba(210,232,255,0.62); max-width: 460px; margin-left: auto; margin-right: auto;
+    .play-overlay.hidden{opacity:0;pointer-events:none}
+    .play-btn{
+      width:56px;height:56px;border-radius:50%;
+      background:rgba(160,205,255,.16);border:1.5px solid rgba(180,215,255,.35);
+      display:flex;align-items:center;justify-content:center;
+      cursor:pointer;transition:background .2s,transform .15s;
     }
-    .breath-key {
-      display: flex; justify-content: center; align-items: center; gap: 16px;
-      margin-top: 6px;
-    }
-    .breath-key-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: rgba(200,225,255,0.50); }
-    .key-swatch { width: 20px; height: 3px; border-radius: 999px; }
+    .play-btn:hover{background:rgba(160,205,255,.28);transform:scale(1.06)}
+    .play-btn svg{width:22px;height:22px;fill:rgba(220,242,255,.90);margin-left:3px}
+    .play-hint{font-size:12px;color:rgba(200,225,255,.50);letter-spacing:.3px}
 
-    /* Fixed-height canvas */
-    .canvas-wrap { position: relative; width: 100%; height: 210px; }
-    @media (min-height: 700px) { .canvas-wrap { height: 240px; } }
-    canvas {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      display: block; touch-action: none; cursor: pointer;
-    }
-
-    .finish-overlay {
-      position: absolute; inset: 0; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 10px;
-      background: rgba(18,27,52,0.0); pointer-events: none; opacity: 0;
-      transition: opacity 1.4s ease, background 1.4s ease;
-      z-index: 20; text-align: center; padding: 20px;
-    }
-    .finish-overlay.show { opacity: 1; pointer-events: all; background: rgba(18,27,52,0.78); }
-    .finish-title {
-      font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500;
-      font-size: clamp(24px, 5vw, 42px); line-height: 1.1; color: #eef7ff;
-    }
-    .finish-sub { font-size: 13px; line-height: 1.6; color: rgba(220,240,255,0.78); max-width: 380px; }
-    .finish-cta {
-      margin-top: 6px; background: rgba(160,205,255,0.14);
-      border: 1px solid rgba(180,215,255,0.30); border-radius: 999px; padding: 10px 22px;
-      font-size: 13px; font-weight: 600; color: rgba(220,240,255,0.90);
-      cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s;
-    }
-    .finish-cta:hover { background: rgba(160,205,255,0.26); }
+    /* Finish overlay */
+    .finish-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(18,27,52,0);pointer-events:none;opacity:0;transition:opacity 1.6s ease,background 1.6s ease;z-index:20;text-align:center;padding:20px}
+    .finish-overlay.show{opacity:1;pointer-events:all;background:rgba(18,27,52,.80)}
+    .finish-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:clamp(22px,5vw,38px);line-height:1.1;color:#eef7ff}
+    .finish-sub{font-size:13px;line-height:1.65;color:rgba(220,240,255,.76);max-width:340px}
+    .finish-cta{margin-top:6px;background:rgba(160,205,255,.14);border:1px solid rgba(180,215,255,.30);border-radius:999px;padding:10px 22px;font-size:13px;font-weight:600;color:rgba(220,240,255,.90);cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s}
+    .finish-cta:hover{background:rgba(160,205,255,.26)}
 
     /* Bottom bar */
-    .ui-bottom {
-      padding: 5px 18px 8px;
-      display: flex; justify-content: space-between; align-items: center; gap: 8px;
-    }
-    .breath-indicator {
-      font-size: 12px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase;
-      min-width: 52px; transition: color 0.4s ease; color: rgba(160,220,255,0.75);
-    }
-    .timer-wrap { flex: 1; display: flex; justify-content: center; align-items: center; }
-    .timer-svg { width: 36px; height: 36px; display: block; overflow: visible; }
-    .timer-track { fill: none; stroke: rgba(180,215,255,0.12); stroke-width: 2.5; }
-    .timer-arc   { fill: none; stroke-width: 2.5; stroke-linecap: round; }
-    .timer-num   { font-size: 10px; font-weight: 600; fill: rgba(210,235,255,0.52);
-                   text-anchor: middle; dominant-baseline: central; }
-    .prog-pill {
-      background: rgba(255,255,255,0.07); border: 1px solid rgba(180,215,255,0.16);
-      border-radius: 999px; padding: 5px 10px;
-      font-size: 10px; font-weight: 600; letter-spacing: 1.1px; text-transform: uppercase;
-      color: rgba(210,232,255,0.50); min-width: 42px; text-align: center;
-    }
+    .ui-bottom{padding:5px 18px 8px;display:flex;justify-content:center;align-items:center;gap:16px;min-height:36px}
+    .breath-word{font-size:14px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;min-width:60px;text-align:center;transition:color .5s ease;color:rgba(200,225,255,.30)}
+    /* progress bar */
+    .prog-bar-wrap{flex:1;max-width:200px;height:3px;background:rgba(180,215,255,.12);border-radius:999px;overflow:hidden}
+    .prog-bar-fill{height:100%;width:0%;border-radius:999px;background:rgba(160,220,255,.55);transition:width .1s linear}
 
-    /* ── WALL ── */
-    .wall-section {
-      width: 100%; max-width: 680px; margin: 0 auto;
-      padding: 22px 18px 48px;
-      border-top: 1px solid rgba(180,215,255,0.10);
-    }
-    .wall-hero { text-align: center; margin-bottom: 18px; }
-    .wall-hero-title {
-      font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500;
-      font-size: clamp(20px, 3.5vw, 30px); color: rgba(220,240,255,0.92); line-height: 1.1;
-    }
-    .wall-hero-sub {
-      margin-top: 5px; font-size: 13px; line-height: 1.55;
-      color: rgba(200,225,255,0.46); max-width: 440px; margin-left: auto; margin-right: auto;
-    }
-    .submit-card {
-      background: rgba(255,255,255,0.065); border: 1px solid rgba(180,215,255,0.16);
-      border-radius: 14px; padding: 14px; margin-bottom: 18px;
-    }
-    .input-row { display: flex; gap: 8px; flex-wrap: wrap; }
-    .prefix-wrap { position: relative; flex: 1 1 220px; }
-    .prefix-label {
-      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
-      font-size: 13px; color: rgba(200,225,255,0.40); pointer-events: none; white-space: nowrap;
-    }
-    .entry-input {
-      width: 100%; background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(180,215,255,0.22); border-radius: 10px;
-      padding: 12px 12px 12px 175px;
-      font-size: 14px; font-family: 'DM Sans', sans-serif; color: #e8f4ff;
-      outline: none; transition: border-color 0.3s;
-    }
-    .entry-input::placeholder { color: rgba(200,225,255,0.25); }
-    .entry-input:focus { border-color: rgba(180,215,255,0.44); }
-    .post-btn {
-      background: rgba(160,205,255,0.14); border: 1px solid rgba(180,215,255,0.28);
-      border-radius: 10px; padding: 12px 18px;
-      font-size: 13px; font-weight: 600; color: rgba(220,240,255,0.92);
-      cursor: pointer; font-family: 'DM Sans', sans-serif;
-      transition: background 0.2s; white-space: nowrap;
-    }
-    .post-btn:hover { background: rgba(160,205,255,0.22); }
-    .post-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .helper-text { margin-top: 8px; font-size: 12px; color: rgba(200,225,255,0.38); line-height: 1.5; }
-    .wall-status { margin-top: 5px; min-height: 15px; font-size: 12px; color: rgba(200,225,255,0.60); }
-    .wall-header {
-      display: flex; justify-content: space-between; align-items: baseline;
-      margin-bottom: 11px; flex-wrap: wrap; gap: 5px;
-    }
-    .wall-label {
-      font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500;
-      font-size: clamp(16px, 2.8vw, 22px); color: rgba(220,240,255,0.88);
-    }
-    .wall-count { font-size: 11px; color: rgba(200,225,255,0.38); }
-    .entries { display: grid; gap: 8px; }
-    .entry {
-      background: rgba(255,255,255,0.065); border: 1px solid rgba(180,215,255,0.15);
-      border-radius: 13px; padding: 11px 13px;
-      display: flex; justify-content: space-between; align-items: center; gap: 12px;
-      transition: border-color 0.3s;
-    }
-    .entry:hover { border-color: rgba(180,215,255,0.26); }
-    .entry-body { flex: 1; min-width: 0; }
-    .entry-prefix { font-size: 10px; color: rgba(190,220,255,0.34); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; }
-    .entry-text { font-size: 14px; font-weight: 500; color: rgba(225,242,255,0.90); word-break: break-word; line-height: 1.3; }
-    .entry-meta { margin-top: 3px; font-size: 11px; color: rgba(190,220,255,0.36); }
-    .like-btn {
-      flex: 0 0 auto; background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(180,215,255,0.18); border-radius: 999px; padding: 6px 13px;
-      font-size: 12px; font-weight: 600; color: rgba(210,235,255,0.70);
-      cursor: pointer; font-family: 'DM Sans', sans-serif;
-      transition: background 0.2s, color 0.2s; white-space: nowrap;
-    }
-    .like-btn:hover:not(:disabled) { background: rgba(160,205,255,0.16); color: rgba(220,242,255,0.95); }
-    .like-btn:disabled { opacity: 0.38; cursor: not-allowed; }
-    .like-btn.liked { background: rgba(160,205,255,0.14); border-color: rgba(180,215,255,0.35); color: rgba(210,240,255,0.86); }
-    .empty-state {
-      background: rgba(255,255,255,0.05); border: 1px dashed rgba(180,215,255,0.14);
-      border-radius: 13px; padding: 22px; text-align: center;
-      color: rgba(200,225,255,0.38); font-size: 13px; line-height: 1.6;
-    }
-    @media (max-width: 420px) {
-      .entry-input { padding-left: 138px; }
-      .prefix-label { font-size: 12px; }
-    }
+    /* wall */
+    .wall-section{width:100%;max-width:680px;margin:0 auto;padding:22px 18px 48px;border-top:1px solid rgba(180,215,255,.10)}
+    .wall-hero{text-align:center;margin-bottom:18px}
+    .wall-hero-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:clamp(20px,3.5vw,30px);color:rgba(220,240,255,.92);line-height:1.1}
+    .wall-hero-sub{margin-top:5px;font-size:13px;line-height:1.55;color:rgba(200,225,255,.46);max-width:440px;margin-left:auto;margin-right:auto}
+    .submit-card{background:rgba(255,255,255,.065);border:1px solid rgba(180,215,255,.16);border-radius:14px;padding:14px;margin-bottom:18px}
+    .input-row{display:flex;gap:8px;flex-wrap:wrap}
+    .prefix-wrap{position:relative;flex:1 1 220px}
+    .prefix-label{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:13px;color:rgba(200,225,255,.40);pointer-events:none;white-space:nowrap}
+    .entry-input{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(180,215,255,.22);border-radius:10px;padding:12px 12px 12px 175px;font-size:14px;font-family:'DM Sans',sans-serif;color:#e8f4ff;outline:none;transition:border-color .3s}
+    .entry-input::placeholder{color:rgba(200,225,255,.25)}
+    .entry-input:focus{border-color:rgba(180,215,255,.44)}
+    .post-btn{background:rgba(160,205,255,.14);border:1px solid rgba(180,215,255,.28);border-radius:10px;padding:12px 18px;font-size:13px;font-weight:600;color:rgba(220,240,255,.92);cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s;white-space:nowrap}
+    .post-btn:hover{background:rgba(160,205,255,.22)}
+    .post-btn:disabled{opacity:.5;cursor:not-allowed}
+    .helper-text{margin-top:8px;font-size:12px;color:rgba(200,225,255,.38);line-height:1.5}
+    .wall-status{margin-top:5px;min-height:15px;font-size:12px;color:rgba(200,225,255,.60)}
+    .wall-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:11px;flex-wrap:wrap;gap:5px}
+    .wall-label{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:clamp(16px,2.8vw,22px);color:rgba(220,240,255,.88)}
+    .wall-count{font-size:11px;color:rgba(200,225,255,.38)}
+    .entries{display:grid;gap:8px}
+    .entry{background:rgba(255,255,255,.065);border:1px solid rgba(180,215,255,.15);border-radius:13px;padding:11px 13px;display:flex;justify-content:space-between;align-items:center;gap:12px;transition:border-color .3s}
+    .entry:hover{border-color:rgba(180,215,255,.26)}
+    .entry-body{flex:1;min-width:0}
+    .entry-prefix{font-size:10px;color:rgba(190,220,255,.34);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+    .entry-text{font-size:14px;font-weight:500;color:rgba(225,242,255,.90);word-break:break-word;line-height:1.3}
+    .entry-meta{margin-top:3px;font-size:11px;color:rgba(190,220,255,.36)}
+    .like-btn{flex:0 0 auto;background:rgba(255,255,255,.07);border:1px solid rgba(180,215,255,.18);border-radius:999px;padding:6px 13px;font-size:12px;font-weight:600;color:rgba(210,235,255,.70);cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s,color .2s;white-space:nowrap}
+    .like-btn:hover:not(:disabled){background:rgba(160,205,255,.16);color:rgba(220,242,255,.95)}
+    .like-btn:disabled{opacity:.38;cursor:not-allowed}
+    .like-btn.liked{background:rgba(160,205,255,.14);border-color:rgba(180,215,255,.35);color:rgba(210,240,255,.86)}
+    .empty-state{background:rgba(255,255,255,.05);border:1px dashed rgba(180,215,255,.14);border-radius:13px;padding:22px;text-align:center;color:rgba(200,225,255,.38);font-size:13px;line-height:1.6}
+    @media(max-width:420px){.entry-input{padding-left:138px}.prefix-label{font-size:12px}}
   </style>
 </head>
 <body>
 
-<!-- ═══ GAME ═══ -->
 <div class="game-section">
   <div class="top-bar">
     <div class="badge">✦ Ride the wave of your breath</div>
     <div class="hashtag">#RiseFor65</div>
   </div>
-
   <div class="center-copy">
     <div class="game-title">Follow only your breath</div>
-    <div class="game-sub">Trace the wave with your finger. Inhale as it rises, exhale as it falls. Watch what happens to the distractions.</div>
+    <div class="game-sub">Watch the light travel the wave. Breathe with it — inhale as it rises, exhale as it falls. Let everything else go.</div>
     <div class="breath-key">
-      <div class="breath-key-item">
-        <div class="key-swatch" style="background:rgba(160,220,255,0.70);"></div>
-        Inhale — rise
-      </div>
-      <div class="breath-key-item">
-        <div class="key-swatch" style="background:rgba(175,195,255,0.42);"></div>
-        Exhale — fall
-      </div>
+      <div class="bki"><div class="swatch" style="background:rgba(160,220,255,.70)"></div>Inhale — rise</div>
+      <div class="bki"><div class="swatch" style="background:rgba(175,195,255,.42)"></div>Exhale — fall</div>
     </div>
   </div>
 
   <div class="canvas-wrap" id="cwrap">
     <canvas id="c"></canvas>
-    <div class="finish-overlay" id="finish">
-      <div class="finish-title">Still. Clear.<br>Just breathing.</div>
-      <div class="finish-sub">When we stay with one thing — our breath — the rest falls quiet on its own.</div>
-      <button class="finish-cta" onclick="document.querySelector('.wall-section').scrollIntoView({behavior:'smooth'})">
-        Share what you'll focus on ↓
+
+    <!-- Play button -->
+    <div class="play-overlay" id="playOverlay">
+      <button class="play-btn" id="playBtn" aria-label="Play">
+        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
       </button>
+      <div class="play-hint">Press to begin</div>
+    </div>
+
+    <!-- Finish -->
+    <div class="finish-overlay" id="finish">
+      <div class="finish-title">Focus is freedom.</div>
+      <div class="finish-sub">When you give your full attention to one thing, the noise of everything else fades.</div>
+      <button class="finish-cta" onclick="document.querySelector('.wall-section').scrollIntoView({behavior:'smooth'})">What will you focus on? ↓</button>
     </div>
   </div>
 
   <div class="ui-bottom">
-    <div class="breath-indicator" id="breathEl">—</div>
-    <div class="timer-wrap">
-      <svg class="timer-svg" id="timerSvg" viewBox="0 0 36 36">
-        <circle class="timer-track" cx="18" cy="18" r="15"/>
-        <circle class="timer-arc"   cx="18" cy="18" r="15" id="timerArc"
-          stroke="rgba(160,220,255,0.70)"
-          stroke-dasharray="94.25" stroke-dashoffset="94.25"
-          transform="rotate(-90 18 18)"/>
-        <text class="timer-num" x="18" y="18" id="timerNum">—</text>
-      </svg>
-    </div>
-    <div class="prog-pill" id="prog">0%</div>
+    <div class="breath-word" id="breathWord">—</div>
+    <div class="prog-bar-wrap"><div class="prog-bar-fill" id="progFill"></div></div>
+    <div class="breath-word" id="breathWord2" style="text-align:right">—</div>
   </div>
 </div>
 
-<!-- ═══ WALL ═══ -->
 <div class="wall-section">
   <div class="wall-hero">
     <div class="wall-hero-title">What will you give your full attention to?</div>
-    <div class="wall-hero-sub">Unitasking — one thing, wholly — is one of the most peaceful choices you can make. Share yours and see what others are focusing on.</div>
+    <div class="wall-hero-sub">Doing one thing at a time builds focus and peace. Share one task you will try to do without multitasking this week.</div>
   </div>
   <div class="submit-card">
     <div class="input-row">
       <div class="prefix-wrap">
         <span class="prefix-label">I will unitask on</span>
-        <input class="entry-input" id="entryInput" type="text" maxlength="100"
-          placeholder="reading, cooking, a walk…" autocomplete="off" />
+        <input class="entry-input" id="entryInput" type="text" maxlength="100" placeholder="reading, cooking, a walk…" autocomplete="off"/>
       </div>
       <button class="post-btn" id="submitBtn">Post</button>
     </div>
@@ -264,472 +164,192 @@
   <div class="entries" id="entries"></div>
 </div>
 
-<!-- ═══ GAME SCRIPT ═══ -->
 <script>
-(function () {
-  var canvas   = document.getElementById('c');
-  var ctx      = canvas.getContext('2d');
-  var finishEl = document.getElementById('finish');
-  var breathEl = document.getElementById('breathEl');
-  var progEl   = document.getElementById('prog');
-  var timerArc = document.getElementById('timerArc');
-  var timerNum = document.getElementById('timerNum');
+(function(){
+  var canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+  var playOverlay=document.getElementById('playOverlay'),playBtn=document.getElementById('playBtn');
+  var finishEl=document.getElementById('finish');
+  var breathWord=document.getElementById('breathWord'),breathWord2=document.getElementById('breathWord2');
+  var progFill=document.getElementById('progFill');
+  var W=0,H=0,DPR=1,T=0;
+  var playing=false,completed=false,progress=0;
+  // 28 seconds total journey
+  var TOTAL_MS=30000;
+  var elapsed=0;
+  var CYCLES=2.75,DRIFT=0.00016;
 
-  var W = 0, H = 0, DPR = 1;
-  var T = 0; // wall-clock ms, for gentle wave animation only
-  var pointerDown = false;
-  var ptr = { x: 0, y: 0 };
-  var progress   = 0;   // 0..1, only ever goes forward
-  var completed  = false;
-  var started    = false;
-  var particles  = [];
-
-  // ── Breath timer ──
-  // Each half-cycle (one crest OR one trough) = 4 seconds
-  var BREATH_SECS   = 4;          // seconds per inhale or exhale
-  var breathPhase   = 0;          // 0..1 within current breath
-  var breathRising  = true;       // current breath direction
-  var CIRCUMFERENCE = 2 * Math.PI * 15; // ~94.25
-
-  // ── Wave geometry ──
-  // 2 full cycles. Smooth bezier curve built from sample points.
-  // Going UP on screen = inhale, DOWN = exhale.
-  var CYCLES = 2;
-  var DRIFT  = 0.00018; // very gentle whole-wave undulation
-
-  function pathY(nx, t) {
-    // nx: 0..1 normalised x
-    var amp   = Math.min(H * 0.30, 75);
-    var base  = H * 0.50;
-    var wave  = -Math.sin(nx * Math.PI * 2 * CYCLES) * amp;
-    var drift = Math.sin(t * DRIFT) * (H * 0.032);
-    return base + wave + drift;
+  function pathY(nx,t){
+    var amp=Math.min(H*.30,72),base=H*.50;
+    return base-Math.sin(nx*Math.PI*2*CYCLES)*amp+Math.sin(t*DRIFT)*(H*.028);
+  }
+  function wx(nx){return W*.06+nx*(W*.88);}
+  function ptAt(p){return{x:wx(p),y:pathY(p,T)};}
+  function rising(p){
+    var e=.005;
+    return pathY(Math.min(1,p+e),T)<pathY(Math.max(0,p-e),T);
   }
 
-  function worldX(nx) { return W * 0.06 + nx * (W * 0.88); }
-
-  // Build a smooth bezier path for the whole wave
-  function buildPath(t) {
-    var N = 64; // sample points
-    var pts = [];
-    for (var i = 0; i <= N; i++) {
-      var nx = i / N;
-      pts.push({ x: worldX(nx), y: pathY(nx, t) });
-    }
-    return pts;
+  function initCanvas(){
+    DPR=Math.max(1,devicePixelRatio||1);
+    var wr=document.getElementById('cwrap');
+    W=wr.offsetWidth;H=wr.offsetHeight;
+    canvas.width=Math.round(W*DPR);canvas.height=Math.round(H*DPR);
+    canvas.style.width=W+'px';canvas.style.height=H+'px';
+    ctx.setTransform(DPR,0,0,DPR,0,0);
   }
-
-  // Get world position at progress p (0..1)
-  function pathPtAt(p, t) {
-    var nx = p;
-    return { x: worldX(nx), y: pathY(nx, t) };
-  }
-
-  // Is the wave rising (going up on screen) at progress p?
-  function isRising(p) {
-    var eps = 0.006;
-    var y1 = pathY(Math.max(0, p - eps), T);
-    var y2 = pathY(Math.min(1, p + eps), T);
-    return y2 < y1;
-  }
-
-  function initCanvas() {
-    DPR = Math.max(1, window.devicePixelRatio || 1);
-    var wrap = document.getElementById('cwrap');
-    W = wrap.offsetWidth;
-    H = wrap.offsetHeight;
-    canvas.width  = Math.round(W * DPR);
-    canvas.height = Math.round(H * DPR);
-    canvas.style.width  = W + 'px';
-    canvas.style.height = H + 'px';
-    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-  }
-  window.addEventListener('resize', function () { requestAnimationFrame(initCanvas); });
+  window.addEventListener('resize',function(){requestAnimationFrame(initCanvas);});
   requestAnimationFrame(initCanvas);
 
-  // ── Draw wave as a single smooth bezier path ──
-  function drawPath(t) {
-    var pts = buildPath(t);
-    var N   = pts.length - 1;
+  function buildPts(N){
+    var pts=[];for(var i=0;i<=N;i++)pts.push({x:wx(i/N),y:pathY(i/N,T)});return pts;
+  }
+  function curve(pts,end){
+    ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);
+    for(var i=0;i<end;i++){
+      var m={x:(pts[i].x+pts[i+1].x)/2,y:(pts[i].y+pts[i+1].y)/2};
+      ctx.quadraticCurveTo(pts[i].x,pts[i].y,m.x,m.y);
+    }
+    ctx.lineTo(pts[end].x,pts[end].y);
+  }
 
-    ctx.save();
-    ctx.lineCap  = 'round';
-    ctx.lineJoin = 'round';
+  // Glowing trail — stores last N tracer positions
+  var trail=[];var TRAIL=40;
 
-    // Helper: draw smooth curve through pts[0..endIdx]
-    function smoothCurve(endIdx) {
-      ctx.beginPath();
-      ctx.moveTo(pts[0].x, pts[0].y);
-      for (var i = 0; i < endIdx; i++) {
-        var p0 = pts[i], p1 = pts[i + 1];
-        var mx = (p0.x + p1.x) / 2, my = (p0.y + p1.y) / 2;
-        ctx.quadraticCurveTo(p0.x, p0.y, mx, my);
+  function drawWave(){
+    var N=80,pts=buildPts(N);
+    ctx.save();ctx.lineCap='round';ctx.lineJoin='round';
+    // halo
+    curve(pts,N);ctx.strokeStyle='rgba(140,200,255,.07)';ctx.lineWidth=30;ctx.stroke();
+    // guide
+    curve(pts,N);ctx.strokeStyle='rgba(160,215,255,.18)';ctx.lineWidth=6;ctx.stroke();
+    // lit trail
+    if(trail.length>1){
+      ctx.beginPath();ctx.moveTo(trail[0].x,trail[0].y);
+      for(var i=1;i<trail.length;i++){
+        var m={x:(trail[i-1].x+trail[i].x)/2,y:(trail[i-1].y+trail[i].y)/2};
+        ctx.quadraticCurveTo(trail[i-1].x,trail[i-1].y,m.x,m.y);
       }
-      ctx.lineTo(pts[endIdx].x, pts[endIdx].y);
+      ctx.lineTo(trail[trail.length-1].x,trail[trail.length-1].y);
+      var g=ctx.createLinearGradient(trail[0].x,0,trail[trail.length-1].x,0);
+      g.addColorStop(0,'rgba(160,220,255,.10)');
+      g.addColorStop(1,'rgba(210,248,255,.88)');
+      ctx.strokeStyle=g;ctx.lineWidth=5;ctx.stroke();
     }
-
-    // Outer halo — full wave
-    smoothCurve(N);
-    ctx.strokeStyle = 'rgba(140,200,255,0.07)';
-    ctx.lineWidth   = 34;
-    ctx.stroke();
-
-    // Guide line — full wave, colour-coded per slope
-    // We draw it as two colour passes for simplicity
-    smoothCurve(N);
-    ctx.strokeStyle = 'rgba(160,215,255,0.22)';
-    ctx.lineWidth   = 8;
-    ctx.stroke();
-
-    // Traced portion — bright, auto-advance colour
-    if (progress > 0.002) {
-      var endIdx = Math.min(N, Math.floor(N * progress) + 1);
-      smoothCurve(endIdx);
-      var rising = isRising(progress);
-      var grd = ctx.createLinearGradient(worldX(0), 0, worldX(progress), 0);
-      grd.addColorStop(0, rising ? 'rgba(130,205,255,0.55)' : 'rgba(150,178,255,0.45)');
-      grd.addColorStop(1, rising ? 'rgba(205,245,255,0.96)' : 'rgba(192,210,255,0.90)');
-      ctx.strokeStyle = grd;
-      ctx.lineWidth   = 5;
-      ctx.stroke();
-    }
-
     ctx.restore();
   }
 
-  // Start / Finish chips
-  function drawEndLabels(t) {
-    var s = pathPtAt(0, t), e = pathPtAt(1, t);
-    function chip(x, y, label) {
-      ctx.save();
-      ctx.font = '500 10px "DM Sans",sans-serif';
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      var tw = ctx.measureText(label).width, bw = tw + 16, bh = 20;
-      ctx.fillStyle   = 'rgba(255,255,255,0.07)';
-      ctx.strokeStyle = 'rgba(180,215,255,0.18)';
-      ctx.lineWidth   = 1;
-      ctx.beginPath(); ctx.roundRect(x - bw/2, y - bh/2, bw, bh, 10);
-      ctx.fill(); ctx.stroke();
-      ctx.fillStyle = 'rgba(210,235,255,0.46)';
-      ctx.fillText(label, x, y + 0.5);
-      ctx.restore();
+  function drawEndLabels(){
+    var s=ptAt(0),e=ptAt(1);
+    function chip(x,y,lbl){
+      ctx.save();ctx.font='500 10px "DM Sans",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+      var tw=ctx.measureText(lbl).width,bw=tw+16,bh=20;
+      ctx.fillStyle='rgba(255,255,255,.07)';ctx.strokeStyle='rgba(180,215,255,.18)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.roundRect(x-bw/2,y-bh/2,bw,bh,10);ctx.fill();ctx.stroke();
+      ctx.fillStyle='rgba(210,235,255,.44)';ctx.fillText(lbl,x,y+.5);ctx.restore();
     }
-    chip(s.x, s.y - 24, 'Start');
-    chip(e.x, e.y - 24, 'Finish');
+    chip(s.x,s.y-24,'Start');chip(e.x,e.y-24,'Finish');
   }
 
-  // ── 9 bubbles, spread clear of wave crests/troughs ──
-  // Wave crests/troughs on a 2-cycle wave are at nx = 0.25, 0.75 (peaks) and 0, 0.5, 1 (troughs)
-  // Bubbles are placed at lx values that land on a rising or falling portion, ly kept well
-  // above (0.12–0.22) or well below (0.78–0.88) to avoid the wave spine region (0.35–0.65)
-  var BUBBLE_DEFS = [
-    { lx: 0.06, ly: 0.14, label: 'WhatsApp' },
-    { lx: 0.17, ly: 0.84, label: 'Notifications' },
-    { lx: 0.28, ly: 0.14, label: 'Email' },
-    { lx: 0.39, ly: 0.84, label: 'Did I lock the door?' },
-    { lx: 0.50, ly: 0.14, label: 'Instagram' },
-    { lx: 0.61, ly: 0.84, label: 'Overthinking' },
-    { lx: 0.72, ly: 0.14, label: 'News' },
-    { lx: 0.83, ly: 0.84, label: 'Work worries' },
-    { lx: 0.93, ly: 0.14, label: 'Just one more thing' },
-  ];
-
-  var bubbles = BUBBLE_DEFS.map(function (b) {
-    return { lx: b.lx, ly: b.ly, label: b.label,
-             burst: false, burstT: 0, burstP: 0,
-             seed: Math.random() * Math.PI * 2 };
-  });
-
-  function drawBubbles(t) {
+  function drawTracer(){
+    if(progress<=0&&!playing)return;
+    var p=ptAt(progress),r=rising(progress),pulse=.5+.5*Math.sin(T*.0028);
     ctx.save();
-    ctx.font = '500 10px "DM Sans",sans-serif';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    var tracerX = worldX(progress);
-
-    bubbles.forEach(function (b) {
-      if (b.burst && b.burstP >= 1) return;
-      var bx = W * b.lx + Math.sin(t * 0.00050 + b.seed) * 6;
-      var by = H * b.ly + Math.cos(t * 0.00046 + b.seed) * 5;
-      var tw = ctx.measureText(b.label).width;
-      var bw = tw + 18, bh = 24;
-
-      if (!b.burst) {
-        var dist = W * b.lx - tracerX;
-        var alpha = dist < 0 ? 0 : Math.min(1, dist / (W * 0.10));
-        ctx.globalAlpha = alpha;
-        ctx.fillStyle   = 'rgba(255,255,255,0.08)';
-        ctx.strokeStyle = 'rgba(180,215,255,0.20)';
-        ctx.lineWidth   = 1;
-        ctx.beginPath(); ctx.roundRect(bx - bw/2, by - bh/2, bw, bh, 12);
-        ctx.fill(); ctx.stroke();
-        ctx.fillStyle = 'rgba(210,232,255,0.50)';
-        ctx.fillText(b.label, bx, by + 0.5);
-        ctx.globalAlpha = 1;
-      } else {
-        var ep = 1 - Math.pow(1 - b.burstP, 3);
-        ctx.globalAlpha = (1 - ep) * 0.32;
-        ctx.beginPath(); ctx.arc(bx, by, 20 + ep * 36, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(190,230,255,0.6)';
-        ctx.lineWidth   = 1.5; ctx.stroke();
-        ctx.globalAlpha = 1;
-      }
-    });
-    ctx.restore();
-  }
-
-  function spawnBurst(bx, by) {
-    for (var i = 0; i < 8; i++) {
-      var angle = (i / 8) * Math.PI * 2 + Math.random() * 0.6;
-      var spd   = 0.5 + Math.random() * 1.1;
-      particles.push({
-        x: bx, y: by,
-        vx: Math.cos(angle) * spd, vy: Math.sin(angle) * spd - 0.3,
-        life: 1.0, r: 1.5 + Math.random() * 2
-      });
-    }
-  }
-
-  function updateBursts(dt) {
-    var tracerX = worldX(progress);
-    bubbles.forEach(function (b) {
-      if (b.burst) { b.burstT += dt; b.burstP = Math.min(1, b.burstT / 550); return; }
-      if (pointerDown && tracerX >= W * b.lx - 1) {
-        b.burst = true; b.burstT = 0; b.burstP = 0;
-        spawnBurst(
-          W * b.lx + Math.sin(T * 0.00050 + b.seed) * 6,
-          H * b.ly + Math.cos(T * 0.00046 + b.seed) * 5
-        );
-      }
-    });
-    particles = particles.filter(function (p) { return p.life > 0; });
-    particles.forEach(function (p) {
-      p.x += p.vx * dt * 0.05; p.y += p.vy * dt * 0.05;
-      p.vy += 0.010; p.life -= dt * 0.0020;
-    });
-  }
-
-  function drawParticles() {
-    ctx.save();
-    particles.forEach(function (p) {
-      ctx.globalAlpha = Math.max(0, p.life) * 0.60;
-      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(205,238,255,0.92)'; ctx.fill();
-    });
-    ctx.globalAlpha = 1; ctx.restore();
-  }
-
-  function drawTracer(t) {
-    var p     = pathPtAt(progress, t);
-    var rising = isRising(progress);
-    var pulse  = 0.5 + 0.5 * Math.sin(t * 0.003);
-    ctx.save();
-    ctx.beginPath(); ctx.arc(p.x, p.y, 14 + pulse * 5, 0, Math.PI * 2);
-    ctx.fillStyle = rising
-      ? 'rgba(160,220,255,' + (0.06 + pulse * 0.05) + ')'
-      : 'rgba(175,195,255,' + (0.06 + pulse * 0.05) + ')';
+    // large outer glow
+    ctx.beginPath();ctx.arc(p.x,p.y,20+pulse*7,0,Math.PI*2);
+    ctx.fillStyle=r?'rgba(140,215,255,'+(0.05+pulse*.05)+')':'rgba(170,190,255,'+(0.05+pulse*.05)+')';
     ctx.fill();
-    ctx.beginPath(); ctx.arc(p.x, p.y, 7, 0, Math.PI * 2);
-    ctx.fillStyle = rising ? 'rgba(220,248,255,0.97)' : 'rgba(205,215,255,0.92)';
-    ctx.fill();
+    // mid ring
+    ctx.beginPath();ctx.arc(p.x,p.y,11,0,Math.PI*2);
+    ctx.fillStyle=r?'rgba(190,235,255,.22)':'rgba(185,205,255,.18)';ctx.fill();
+    // core
+    ctx.beginPath();ctx.arc(p.x,p.y,6,0,Math.PI*2);
+    ctx.fillStyle=r?'rgba(225,250,255,.98)':'rgba(208,218,255,.95)';ctx.fill();
     ctx.restore();
   }
 
-  // ── Breath-timer UI ──
-  // breathPhase: 0..1 within the current 4-second breath
-  function updateTimerUI(dt) {
-    if (!started || completed) return;
+  function updateUI(){
+    var r=rising(progress);
+    var label=r?'inhale':'exhale';
+    var col=r?'rgba(160,220,255,.88)':'rgba(175,200,255,.75)';
+    breathWord.textContent=label;breathWord.style.color=col;
+    breathWord2.textContent=label;breathWord2.style.color=col;
+    progFill.style.width=Math.round(progress*100)+'%';
+  }
 
-    var rising = isRising(progress);
-
-    // Advance phase by dt
-    var phaseDelta = dt / (BREATH_SECS * 1000);
-    breathPhase += phaseDelta;
-
-    // When a full breath completes, wrap — no reset needed since wave auto-advances
-    if (breathPhase > 1) breathPhase = breathPhase % 1;
-
-    // Timer arc: fill up during inhale, drain during exhale
-    var arcFrac = rising ? breathPhase : (1 - breathPhase);
-    var offset  = CIRCUMFERENCE * (1 - arcFrac);
-    timerArc.setAttribute('stroke-dashoffset', offset.toFixed(2));
-    timerArc.setAttribute('stroke', rising ? 'rgba(160,220,255,0.72)' : 'rgba(175,195,255,0.55)');
-
-    // Countdown number: seconds remaining in this breath
-    var secsLeft = Math.ceil((1 - breathPhase) * BREATH_SECS);
-    if (secsLeft < 1) secsLeft = 1;
-    timerNum.textContent = secsLeft;
-
-    // Breath word
-    if (rising) {
-      breathEl.textContent = 'inhale';
-      breathEl.style.color = 'rgba(160,220,255,0.88)';
-    } else {
-      breathEl.textContent = 'exhale';
-      breathEl.style.color = 'rgba(175,200,255,0.75)';
+  function update(dt){
+    if(!playing||completed)return;
+    elapsed+=dt;
+    progress=Math.min(1,elapsed/TOTAL_MS);
+    // update trail
+    var p=ptAt(progress);
+    trail.push({x:p.x,y:p.y});
+    if(trail.length>TRAIL)trail.shift();
+    updateUI();
+    if(progress>=1){
+      completed=true;
+      breathWord.textContent='✦';breathWord2.textContent='✦';
+      breathWord.style.color='rgba(200,235,255,.70)';breathWord2.style.color='rgba(200,235,255,.70)';
+      setTimeout(function(){finishEl.classList.add('show');},600);
     }
   }
 
-  // ── Main update — progress only ever increases ──
-  function update(dt) {
-    if (completed) return;
-
-    if (pointerDown) {
-      started = true;
-      // Advance progress smoothly — no regression, clamp at 1
-      progress = Math.min(1, progress + 0.00100 * dt);
-      updateTimerUI(dt);
-    } else {
-      if (!started) return; // haven't started yet, nothing to do
-      // Pause: show gentle idle state without resetting
-      breathEl.textContent = '—';
-      breathEl.style.color = 'rgba(200,225,255,0.30)';
-      timerNum.textContent = '—';
-      timerArc.setAttribute('stroke-dashoffset', CIRCUMFERENCE.toFixed(2));
-    }
-
-    progEl.textContent = Math.round(progress * 100) + '%';
-    updateBursts(dt);
-
-    if (progress >= 1) {
-      completed = true;
-      breathEl.textContent = '✦';
-      breathEl.style.color = 'rgba(200,235,255,0.70)';
-      timerNum.textContent = '✦';
-      timerArc.setAttribute('stroke-dashoffset', '0');
-      progEl.textContent = '100%';
-      setTimeout(function () { finishEl.classList.add('show'); }, 800);
-    }
-  }
-
-  var lastT = performance.now();
-  function loop(now) {
-    var dt = Math.min(32, now - lastT);
-    lastT = now; T = now;
+  var lastT=performance.now();
+  function loop(now){
+    var dt=Math.min(32,now-lastT);lastT=now;T=now;
     update(dt);
-    ctx.clearRect(0, 0, W, H);
-    drawBubbles(now);
-    drawParticles();
-    drawPath(now);
-    drawEndLabels(now);
-    drawTracer(now);
+    ctx.clearRect(0,0,W,H);
+    drawWave();drawEndLabels();drawTracer();
     requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
 
-  function setPtr(e) {
-    var rect = canvas.getBoundingClientRect();
-    var src  = e.touches ? e.touches[0] : e;
-    ptr.x = src.clientX - rect.left;
-    ptr.y = src.clientY - rect.top;
-  }
-  canvas.addEventListener('pointerdown',   function (e) { pointerDown = true;  setPtr(e); canvas.setPointerCapture(e.pointerId); });
-  canvas.addEventListener('pointermove',   function (e) { setPtr(e); });
-  canvas.addEventListener('pointerup',     function ()  { pointerDown = false; });
-  canvas.addEventListener('pointercancel', function ()  { pointerDown = false; });
-  canvas.addEventListener('touchstart',    function (e) { pointerDown = true;  setPtr(e); }, { passive: true });
-  canvas.addEventListener('touchmove',     function (e) { setPtr(e); }, { passive: true });
-  canvas.addEventListener('touchend',      function ()  { pointerDown = false; }, { passive: true });
+  playBtn.addEventListener('click',function(){
+    if(playing)return;
+    playing=true;
+    playOverlay.classList.add('hidden');
+  });
 })();
 </script>
 
-<!-- ═══ WALL SCRIPT ═══ -->
 <script>
-(function () {
-  var POLL_ID   = 'risefor65-focus-wall-v1';
-  var API_URL   = '/api/focus-wall?poll=' + encodeURIComponent(POLL_ID);
-  var LIKED_KEY = POLL_ID + '-liked';
-
-  var inputEl   = document.getElementById('entryInput');
-  var submitBtn = document.getElementById('submitBtn');
-  var entriesEl = document.getElementById('entries');
-  var countEl   = document.getElementById('countText');
-  var statusEl  = document.getElementById('wallStatus');
-
-  var entries  = [];
-  var likedMap = JSON.parse(localStorage.getItem(LIKED_KEY) || '{}');
-  var busy     = false;
-
-  function esc(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-  function timeAgo(ts) {
-    if (!ts) return 'just now';
-    var d = Date.now() - ts, m = Math.floor(d / 60000);
-    if (m < 1)  return 'just now';
-    if (m < 60) return m + 'm ago';
-    var h = Math.floor(m / 60);
-    if (h < 24) return h + 'h ago';
-    return Math.floor(h / 24) + 'd ago';
-  }
-
-  function render() {
-    var unique = entries.length;
-    var total  = entries.reduce(function (s, e) { return s + Number(e.count || 0); }, 0);
-    countEl.textContent = total + ' ' + (total === 1 ? 'response' : 'responses') + ' · ' + unique + ' unique';
-    if (!entries.length) {
-      entriesEl.innerHTML = '<div class="empty-state">Be the first to share what you\'ll give your full attention to.</div>';
-      return;
-    }
-    var sorted = entries.slice().sort(function (a, b) {
-      return (Number(b.count || 0) - Number(a.count || 0)) || ((b.updatedAt || 0) - (a.updatedAt || 0));
-    });
-    entriesEl.innerHTML = sorted.map(function (e) {
-      var liked = !!likedMap[e.id];
-      return '<div class="entry">' +
-        '<div class="entry-body">' +
-          '<div class="entry-prefix">Unitasking on</div>' +
-          '<div class="entry-text">' + esc(e.text || '') + '</div>' +
-          '<div class="entry-meta">' + (e.count || 0) + ' ' + (Number(e.count) === 1 ? 'person' : 'people') +
-            ' · ' + timeAgo(e.updatedAt || e.createdAt) + '</div>' +
-        '</div>' +
-        '<button type="button" class="like-btn' + (liked ? ' liked' : '') + '" data-id="' + e.id + '"' +
-          (liked ? ' disabled' : '') + '>+1</button>' +
-      '</div>';
+(function(){
+  var POLL_ID='risefor65-focus-wall-v1';
+  var API_URL='/api/focus-wall?poll='+encodeURIComponent(POLL_ID);
+  var LIKED_KEY=POLL_ID+'-liked';
+  var inputEl=document.getElementById('entryInput'),submitBtn=document.getElementById('submitBtn');
+  var entriesEl=document.getElementById('entries'),countEl=document.getElementById('countText');
+  var statusEl=document.getElementById('wallStatus');
+  var entries=[],likedMap=JSON.parse(localStorage.getItem(LIKED_KEY)||'{}'),busy=false;
+  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function ago(ts){if(!ts)return'just now';var d=Date.now()-ts,m=Math.floor(d/60000);if(m<1)return'just now';if(m<60)return m+'m ago';var h=Math.floor(m/60);if(h<24)return h+'h ago';return Math.floor(h/24)+'d ago';}
+  function render(){
+    var u=entries.length,r=entries.reduce(function(s,e){return s+Number(e.count||0);},0);
+    countEl.textContent=r+' '+(r===1?'response':'responses')+' · '+u+' unique';
+    if(!entries.length){entriesEl.innerHTML='<div class="empty-state">Be the first to share what you\'ll give your full attention to.</div>';return;}
+    var sorted=entries.slice().sort(function(a,b){return(Number(b.count||0)-Number(a.count||0))||((b.updatedAt||0)-(a.updatedAt||0));});
+    entriesEl.innerHTML=sorted.map(function(e){
+      var l=!!likedMap[e.id];
+      return'<div class="entry"><div class="entry-body"><div class="entry-prefix">Unitasking on</div><div class="entry-text">'+esc(e.text||'')+'</div><div class="entry-meta">'+(e.count||0)+' '+(Number(e.count)===1?'person':'people')+' · '+ago(e.updatedAt||e.createdAt)+'</div></div><button type="button" class="like-btn'+(l?' liked':'')+'" data-id="'+e.id+'"'+(l?' disabled':'')+'>+1</button></div>';
     }).join('');
-    entriesEl.querySelectorAll('.like-btn').forEach(function (btn) {
-      btn.addEventListener('click', function () { plusOne(btn.dataset.id); });
-    });
+    entriesEl.querySelectorAll('.like-btn').forEach(function(btn){btn.addEventListener('click',function(){plusOne(btn.dataset.id);});});
   }
-
-  function load(show) {
-    if (show) countEl.textContent = 'Loading…';
-    fetch(API_URL, { cache: 'no-store' })
-      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-      .then(function (d) { entries = Array.isArray(d.entries) ? d.entries : []; render(); })
-      .catch(function (e) { console.error(e); if (show) countEl.textContent = 'Could not load — try refreshing'; });
+  function load(show){
+    if(show)countEl.textContent='Loading…';
+    fetch(API_URL,{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(d){entries=Array.isArray(d.entries)?d.entries:[];render();}).catch(function(e){console.error(e);if(show)countEl.textContent='Could not load — try refreshing';});
   }
-
-  function submit() {
-    var text = inputEl.value.trim();
-    if (!text || busy) return;
-    busy = true; submitBtn.disabled = true; statusEl.textContent = 'Posting…';
-    fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'add', text: text }) })
-      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-      .then(function (d) {
-        entries = Array.isArray(d.entries) ? d.entries : [];
-        inputEl.value = ''; statusEl.textContent = 'Posted ✓'; render();
-        setTimeout(function () { if (statusEl.textContent === 'Posted ✓') statusEl.textContent = ''; }, 2000);
-      })
-      .catch(function (e) { console.error(e); statusEl.textContent = 'Could not post — please try again.'; })
-      .finally(function () { busy = false; submitBtn.disabled = false; });
+  function submit(){
+    var text=inputEl.value.trim();if(!text||busy)return;
+    busy=true;submitBtn.disabled=true;statusEl.textContent='Posting…';
+    fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'add',text:text})}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(d){entries=Array.isArray(d.entries)?d.entries:[];inputEl.value='';statusEl.textContent='Posted ✓';render();setTimeout(function(){if(statusEl.textContent==='Posted ✓')statusEl.textContent='';},2000);}).catch(function(e){console.error(e);statusEl.textContent='Could not post — try again.';}).finally(function(){busy=false;submitBtn.disabled=false;});
   }
-
-  function plusOne(id) {
-    if (likedMap[id] || busy) return;
-    likedMap[id] = true; localStorage.setItem(LIKED_KEY, JSON.stringify(likedMap)); render();
-    fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'like', id: id }) })
-      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-      .then(function (d) { entries = Array.isArray(d.entries) ? d.entries : entries; render(); })
-      .catch(function (e) {
-        console.error(e); delete likedMap[id];
-        localStorage.setItem(LIKED_KEY, JSON.stringify(likedMap)); render();
-      });
+  function plusOne(id){
+    if(likedMap[id]||busy)return;
+    likedMap[id]=true;localStorage.setItem(LIKED_KEY,JSON.stringify(likedMap));render();
+    fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'like',id:id})}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(d){entries=Array.isArray(d.entries)?d.entries:entries;render();}).catch(function(e){console.error(e);delete likedMap[id];localStorage.setItem(LIKED_KEY,JSON.stringify(likedMap));render();});
   }
-
-  submitBtn.addEventListener('click', submit);
-  inputEl.addEventListener('keydown', function (e) { if (e.key === 'Enter') submit(); });
-  load(true);
-  setInterval(function () { load(false); }, 10000);
+  submitBtn.addEventListener('click',submit);
+  inputEl.addEventListener('keydown',function(e){if(e.key==='Enter')submit();});
+  load(true);setInterval(function(){load(false);},10000);
 })();
 </script>
 </body>
