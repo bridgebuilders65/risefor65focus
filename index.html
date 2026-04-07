@@ -15,56 +15,79 @@
       color:#e8f4ff;font-family:'DM Sans',system-ui,sans-serif;overflow-x:hidden;
     }
 
-    /* ── GAME ── */
+    /* ── TOP ── */
     .game-section{width:100%;padding-bottom:4px}
     .top-bar{padding:14px 18px 0;display:flex;justify-content:space-between;align-items:center}
     .badge{background:rgba(255,255,255,.07);border:1px solid rgba(180,215,255,.18);border-radius:999px;padding:6px 13px;font-size:10px;font-weight:600;letter-spacing:1.3px;text-transform:uppercase;color:rgba(220,238,255,.85)}
     .hashtag{font-size:11px;color:rgba(200,225,255,.38)}
-    .center-copy{text-align:center;padding:10px 18px 6px}
-    .game-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:clamp(22px,5vw,40px);line-height:1.05;color:#eef7ff;letter-spacing:-.5px}
-    .game-sub{margin-top:5px;font-size:13px;line-height:1.55;color:rgba(210,232,255,.62);max-width:420px;margin-left:auto;margin-right:auto}
-    .breath-key{display:flex;justify-content:center;gap:16px;margin-top:6px}
-    .bki{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(200,225,255,.50)}
-    .swatch{width:20px;height:3px;border-radius:999px}
 
-    /* Canvas */
+    .center-copy{text-align:center;padding:10px 18px 8px}
+    .game-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:clamp(24px,5vw,44px);line-height:1.05;color:#eef7ff;letter-spacing:-.5px}
+    /* Larger, clearer sub copy — no legend needed */
+    .game-sub{margin-top:8px;font-size:clamp(14px,3vw,16px);line-height:1.6;color:rgba(215,235,255,.75);max-width:400px;margin-left:auto;margin-right:auto}
+
+    /* ── CANVAS ── */
     .canvas-wrap{position:relative;width:100%;height:210px}
-    @media(min-height:700px){.canvas-wrap{height:240px}}
+    @media(min-height:700px){.canvas-wrap{height:250px}}
     canvas{position:absolute;top:0;left:0;width:100%;height:100%;display:block}
 
-    /* Play button overlay */
-    .play-overlay{
-      position:absolute;inset:0;display:flex;flex-direction:column;
-      align-items:center;justify-content:center;gap:10px;
-      z-index:10;transition:opacity .6s ease;
-    }
+    /* ── PLAY OVERLAY ── */
+    .play-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;z-index:10;transition:opacity .8s ease}
     .play-overlay.hidden{opacity:0;pointer-events:none}
-    .play-btn{
-      width:56px;height:56px;border-radius:50%;
-      background:rgba(160,205,255,.16);border:1.5px solid rgba(180,215,255,.35);
-      display:flex;align-items:center;justify-content:center;
-      cursor:pointer;transition:background .2s,transform .15s;
+    /* outer breathing ring */
+    .play-ring{position:relative;width:72px;height:72px;display:flex;align-items:center;justify-content:center}
+    .play-ring::before{
+      content:'';position:absolute;inset:-8px;border-radius:50%;
+      border:1.5px solid rgba(180,215,255,.22);
+      animation:breathe 3.5s ease-in-out infinite;
     }
+    .play-ring::after{
+      content:'';position:absolute;inset:-16px;border-radius:50%;
+      border:1px solid rgba(180,215,255,.10);
+      animation:breathe 3.5s ease-in-out infinite .6s;
+    }
+    @keyframes breathe{
+      0%,100%{transform:scale(.88);opacity:.4}
+      50%{transform:scale(1.08);opacity:1}
+    }
+    .play-btn{width:56px;height:56px;border-radius:50%;background:rgba(160,205,255,.16);border:1.5px solid rgba(180,215,255,.38);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s,transform .15s;position:relative;z-index:1}
     .play-btn:hover{background:rgba(160,205,255,.28);transform:scale(1.06)}
-    .play-btn svg{width:22px;height:22px;fill:rgba(220,242,255,.90);margin-left:3px}
-    .play-hint{font-size:12px;color:rgba(200,225,255,.50);letter-spacing:.3px}
+    .play-btn svg{width:20px;height:20px;fill:rgba(220,242,255,.92);margin-left:3px}
+    .play-hint{font-size:12px;color:rgba(200,225,255,.45);letter-spacing:.3px}
 
-    /* Finish overlay */
-    .finish-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(18,27,52,0);pointer-events:none;opacity:0;transition:opacity 1.6s ease,background 1.6s ease;z-index:20;text-align:center;padding:20px}
-    .finish-overlay.show{opacity:1;pointer-events:all;background:rgba(18,27,52,.80)}
-    .finish-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:clamp(22px,5vw,38px);line-height:1.1;color:#eef7ff}
-    .finish-sub{font-size:13px;line-height:1.65;color:rgba(220,240,255,.76);max-width:340px}
-    .finish-cta{margin-top:6px;background:rgba(160,205,255,.14);border:1px solid rgba(180,215,255,.30);border-radius:999px;padding:10px 22px;font-size:13px;font-weight:600;color:rgba(220,240,255,.90);cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s}
+    /* ── FINISH OVERLAY — very slow dissolve ── */
+    .finish-overlay{
+      position:absolute;inset:0;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;gap:14px;
+      background:rgba(18,27,52,0);pointer-events:none;opacity:0;
+      transition:opacity 2.8s ease,background 2.8s ease;
+      z-index:20;text-align:center;padding:24px;
+    }
+    .finish-overlay.show{opacity:1;pointer-events:all;background:rgba(14,22,46,.86)}
+    .finish-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:clamp(26px,5.5vw,44px);line-height:1.1;color:#eef7ff;opacity:0;transition:opacity 2s ease .8s}
+    .finish-overlay.show .finish-title{opacity:1}
+    .finish-sub{font-size:14px;line-height:1.65;color:rgba(220,240,255,.72);max-width:320px;opacity:0;transition:opacity 2s ease 1.6s}
+    .finish-overlay.show .finish-sub{opacity:1}
+    .finish-cta{margin-top:4px;background:rgba(160,205,255,.14);border:1px solid rgba(180,215,255,.28);border-radius:999px;padding:10px 22px;font-size:13px;font-weight:600;color:rgba(220,240,255,.90);cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s;opacity:0;transition:opacity 2s ease 2.2s,background .2s}
+    .finish-overlay.show .finish-cta{opacity:1}
     .finish-cta:hover{background:rgba(160,205,255,.26)}
 
-    /* Bottom bar */
-    .ui-bottom{padding:5px 18px 8px;display:flex;justify-content:center;align-items:center;gap:16px;min-height:36px}
-    .breath-word{font-size:14px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;min-width:60px;text-align:center;transition:color .5s ease;color:rgba(200,225,255,.30)}
-    /* progress bar */
-    .prog-bar-wrap{flex:1;max-width:200px;height:3px;background:rgba(180,215,255,.12);border-radius:999px;overflow:hidden}
-    .prog-bar-fill{height:100%;width:0%;border-radius:999px;background:rgba(160,220,255,.55);transition:width .1s linear}
+    /* ── BOTTOM BAR — centred large breath word ── */
+    .ui-bottom{padding:4px 18px 10px;display:flex;flex-direction:column;align-items:center;gap:6px}
+    /* Large breath word — the centrepiece */
+    .breath-word{
+      font-size:22px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+      text-align:center;min-height:28px;
+      transition:opacity .6s ease,color 1s ease;
+      color:rgba(160,220,255,.85);
+    }
+    .breath-word.exhale{color:rgba(185,208,255,.72)}
+    .breath-word.idle{opacity:.25;color:rgba(200,225,255,.5)}
+    /* thin progress bar */
+    .prog-bar-wrap{width:min(240px,60vw);height:2px;background:rgba(180,215,255,.10);border-radius:999px;overflow:hidden}
+    .prog-bar-fill{height:100%;width:0%;border-radius:999px;background:rgba(160,220,255,.45);transition:width .15s linear}
 
-    /* wall */
+    /* ── WALL ── */
     .wall-section{width:100%;max-width:680px;margin:0 auto;padding:22px 18px 48px;border-top:1px solid rgba(180,215,255,.10)}
     .wall-hero{text-align:center;margin-bottom:18px}
     .wall-hero-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:clamp(20px,3.5vw,30px);color:rgba(220,240,255,.92);line-height:1.1}
@@ -106,27 +129,24 @@
     <div class="badge">✦ Ride the wave of your breath</div>
     <div class="hashtag">#RiseFor65</div>
   </div>
+
   <div class="center-copy">
     <div class="game-title">Follow only your breath</div>
     <div class="game-sub">Watch the light travel the wave. Breathe with it — inhale as it rises, exhale as it falls. Let everything else go.</div>
-    <div class="breath-key">
-      <div class="bki"><div class="swatch" style="background:rgba(160,220,255,.70)"></div>Inhale — rise</div>
-      <div class="bki"><div class="swatch" style="background:rgba(175,195,255,.42)"></div>Exhale — fall</div>
-    </div>
   </div>
 
   <div class="canvas-wrap" id="cwrap">
     <canvas id="c"></canvas>
 
-    <!-- Play button -->
     <div class="play-overlay" id="playOverlay">
-      <button class="play-btn" id="playBtn" aria-label="Play">
-        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-      </button>
+      <div class="play-ring">
+        <button class="play-btn" id="playBtn" aria-label="Begin breathing exercise">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+      </div>
       <div class="play-hint">Press to begin</div>
     </div>
 
-    <!-- Finish -->
     <div class="finish-overlay" id="finish">
       <div class="finish-title">Focus is freedom.</div>
       <div class="finish-sub">When you give your full attention to one thing, the noise of everything else fades.</div>
@@ -135,16 +155,16 @@
   </div>
 
   <div class="ui-bottom">
-    <div class="breath-word" id="breathWord">—</div>
+    <div class="breath-word idle" id="breathWord">breathe</div>
     <div class="prog-bar-wrap"><div class="prog-bar-fill" id="progFill"></div></div>
-    <div class="breath-word" id="breathWord2" style="text-align:right">—</div>
   </div>
 </div>
 
+<!-- ═══ WALL ═══ -->
 <div class="wall-section">
   <div class="wall-hero">
     <div class="wall-hero-title">What will you give your full attention to?</div>
-    <div class="wall-hero-sub">Doing one thing at a time builds focus and peace. Share one task you will try to do without multitasking this week.</div>
+    <div class="wall-hero-sub">Doing one thing at a time builds focus and peace. Share one task you'll try to do without multitasking this week.</div>
   </div>
   <div class="submit-card">
     <div class="input-row">
@@ -164,192 +184,366 @@
   <div class="entries" id="entries"></div>
 </div>
 
+<!-- ═══ BREATH WAVE SCRIPT ═══ -->
 <script>
 (function(){
-  var canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
-  var playOverlay=document.getElementById('playOverlay'),playBtn=document.getElementById('playBtn');
-  var finishEl=document.getElementById('finish');
-  var breathWord=document.getElementById('breathWord'),breathWord2=document.getElementById('breathWord2');
-  var progFill=document.getElementById('progFill');
-  var W=0,H=0,DPR=1,T=0;
-  var playing=false,completed=false,progress=0;
-  // 28 seconds total journey
-  var TOTAL_MS=30000;
+  var canvas   = document.getElementById('c');
+  var ctx      = canvas.getContext('2d');
+  var playOvr  = document.getElementById('playOverlay');
+  var playBtn  = document.getElementById('playBtn');
+  var finishEl = document.getElementById('finish');
+  var bWord    = document.getElementById('breathWord');
+  var pFill    = document.getElementById('progFill');
+
+  var W=0, H=0, DPR=1, T=0;
+  var playing=false, completed=false;
   var elapsed=0;
-  var CYCLES=2.75,DRIFT=0.00016;
 
-  function pathY(nx,t){
-    var amp=Math.min(H*.30,72),base=H*.50;
-    return base-Math.sin(nx*Math.PI*2*CYCLES)*amp+Math.sin(t*DRIFT)*(H*.028);
-  }
-  function wx(nx){return W*.06+nx*(W*.88);}
-  function ptAt(p){return{x:wx(p),y:pathY(p,T)};}
-  function rising(p){
-    var e=.005;
-    return pathY(Math.min(1,p+e),T)<pathY(Math.max(0,p-e),T);
+  // ── Timing ──
+  // 2.75 cycles at 30 s total → ends at wave trough (full exhale)
+  var TOTAL_MS = 30000;
+  var CYCLES   = 2.75;
+  var DRIFT    = 0.00014; // subtle whole-wave living drift
+
+  // progress: the ball's position 0→1 along the wave.
+  // We START the ball at progress=0, which maps to nx=0.
+  // sin(0) = 0, but we want to start at the BOTTOM of a trough.
+  // Solution: offset the wave so nx=0 is a trough:
+  //   use  -sin(nx*2π*CYCLES + π/2*-1)  →  use a phase offset of -π/2
+  //   i.e. sin(θ - π/2) = -cos(θ), so pathY uses -(-cos) = cos at nx=0 → that's a peak.
+  // Simplest: use cos instead of sin; cos(0)=1 = peak, not trough.
+  // We want trough at start: use +sin, which gives sin(0)=0 (midpoint), not trough.
+  // Best approach: start ball at the nx position that IS the first trough.
+  // For CYCLES=2.75, first trough of -sin(nx*2π*2.75) is where sin=+1,
+  // i.e. nx*2π*2.75 = π/2  →  nx = 1/(4*2.75) = 1/11 ≈ 0.0909
+  // So: startProgress = 1/(4*CYCLES)  and run from there to startProgress+1 mapped back to 0..1
+  // OR more elegantly: add a phase so the wave starts at a trough at nx=0.
+  // We want pathY(0) to be at maximum (bottom of screen = trough of inhale start):
+  //   -sin(phase) * amp = +amp  →  sin(phase) = -1  →  phase = -π/2
+  // So: pathY(nx) = base - sin(nx*2π*CYCLES - π/2)*amp = base + cos(nx*2π*CYCLES)*amp ... wait
+  // -sin(θ - π/2) = -(-cos θ) = cos θ  → that gives +amp at nx=0 = PEAK (top), not trough.
+  // We want TROUGH (bottom) at nx=0, meaning the ball starts low and INHALES first (rises up).
+  // TROUGH = pathY is maximum (screen-down is +y). We want the wave to go UP first.
+  // -sin(nx*2π*C + offset) = +amp  →  sin(offset) = -1  →  offset = -π/2  → gives trough ✓
+  // CHECK: at offset=-π/2: -sin(-π/2) = -(-1) = 1, multiplied by amp → base + amp = bottom ✓
+  // Next point rises (ball moves up screen) = inhale ✓
+  // At end nx=1: -sin(2π*2.75 - π/2) = -sin(5.5π - π/2) = -sin(5π) * ... let me just compute:
+  // 2π*2.75 - π/2 = 5.5π - 0.5π = 5π → sin(5π)=0 → base+0 = midpoint. Hmm, not a trough.
+  // Let me try offset = +π/2:
+  // at nx=0: -sin(π/2) = -1 → base - amp = TOP (peak) — that's an exhale start, not what we want.
+  // Back to -π/2 giving trough at start. End check:
+  // nx=1, CYCLES=2.75, phase=-π/2: angle = 2π*2.75 + (-π/2) - wait, sign:
+  // formula: -sin(nx*2π*CYCLES + PHASE)*amp
+  // PHASE = -π/2.
+  // At nx=1: -sin(2π*2.75 - π/2) = -sin(5.5π - 0.5π) = -sin(5π) = -sin(π) = 0 (midpoint, mid-exhale)
+  // To end at a trough: need -sin(2π*2.75 + PHASE) = +1 → sin(...)=-1 → angle = -π/2 + 2kπ
+  // 2π*2.75 + PHASE = -π/2 + 2kπ (k=3) = -π/2 + 6π = 11.5π
+  // PHASE = 11.5π - 5.5π = 6π → equivalent to 0 (same as no phase)
+  // With PHASE=0: start at nx=0: -sin(0)=0 (midpoint). Not a trough.
+  // PHASE = -π/2 gives trough at start AND ends at midpoint (half-exhale) — acceptable.
+  // PHASE = π: start: -sin(π)=0 midpoint. End: -sin(5.5π+π)=-sin(6.5π)=-sin(.5π)=-1 → trough ✓
+  // But PHASE=π starts at midpoint. Let's try PHASE=π/2:
+  // start: -sin(π/2)=-1 → base-amp → TOP (peak). Exhale first. Not ideal.
+  // CONCLUSION: PHASE=-π/2 is the best: starts at trough (first breath is full inhale), ends mid-exhale.
+  // That's good enough — they won't be holding their breath, just mid-breath.
+  // To truly end on a trough, we'd need CYCLES=2.5 with PHASE=0:
+  // start nx=0: -sin(0)=0, midpoint. Nope.
+  // CYCLES=2.5, PHASE=-π/2: end: -sin(2π*2.5-π/2)=-sin(5π-π/2)=-sin(4.5π)=-sin(π/2+4π)=-1 → TROUGH ✓
+  // AND start: trough ✓ AND end: trough ✓  PERFECT.
+  // Let's use CYCLES=2.5, PHASE=-π/2. Total journey = 5 half-breaths each starting/ending at trough or peak.
+  // At 30s: each half-breath ≈ 6s. That's a lovely slow pace.
+
+  // Overwrite CYCLES with the correct value
+  CYCLES = 2.5;
+  var PHASE = -Math.PI / 2; // starts AND ends at trough
+
+  var progress = 0;
+  var trail = [], TRAIL = 44;
+
+  function pathY(nx) {
+    var amp   = Math.min(H * 0.30, 72);
+    var base  = H * 0.50;
+    // living drift: very slow vertical float of the whole wave
+    var drift = Math.sin(T * DRIFT) * (H * 0.022);
+    return base - Math.sin(nx * Math.PI * 2 * CYCLES + PHASE) * amp + drift;
   }
 
-  function initCanvas(){
-    DPR=Math.max(1,devicePixelRatio||1);
-    var wr=document.getElementById('cwrap');
-    W=wr.offsetWidth;H=wr.offsetHeight;
-    canvas.width=Math.round(W*DPR);canvas.height=Math.round(H*DPR);
-    canvas.style.width=W+'px';canvas.style.height=H+'px';
-    ctx.setTransform(DPR,0,0,DPR,0,0);
+  function wx(nx) { return W * 0.06 + nx * (W * 0.88); }
+  function ptAt(p) { return { x: wx(p), y: pathY(p) }; }
+
+  function isRising(p) {
+    var e = 0.005;
+    return pathY(Math.min(1, p + e)) < pathY(Math.max(0, p - e));
   }
-  window.addEventListener('resize',function(){requestAnimationFrame(initCanvas);});
+
+  function initCanvas() {
+    DPR = Math.max(1, devicePixelRatio || 1);
+    var wr = document.getElementById('cwrap');
+    W = wr.offsetWidth; H = wr.offsetHeight;
+    canvas.width  = Math.round(W * DPR);
+    canvas.height = Math.round(H * DPR);
+    canvas.style.width  = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+  window.addEventListener('resize', function(){ requestAnimationFrame(initCanvas); });
   requestAnimationFrame(initCanvas);
 
-  function buildPts(N){
-    var pts=[];for(var i=0;i<=N;i++)pts.push({x:wx(i/N),y:pathY(i/N,T)});return pts;
+  // ── Smooth curve helper ──
+  function buildPts(N) {
+    var pts = [];
+    for (var i = 0; i <= N; i++) pts.push({ x: wx(i/N), y: pathY(i/N) });
+    return pts;
   }
-  function curve(pts,end){
-    ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);
-    for(var i=0;i<end;i++){
-      var m={x:(pts[i].x+pts[i+1].x)/2,y:(pts[i].y+pts[i+1].y)/2};
-      ctx.quadraticCurveTo(pts[i].x,pts[i].y,m.x,m.y);
+  function smoothPath(pts, endIdx) {
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for (var i = 0; i < endIdx; i++) {
+      var mx = (pts[i].x + pts[i+1].x) / 2;
+      var my = (pts[i].y + pts[i+1].y) / 2;
+      ctx.quadraticCurveTo(pts[i].x, pts[i].y, mx, my);
     }
-    ctx.lineTo(pts[end].x,pts[end].y);
+    ctx.lineTo(pts[endIdx].x, pts[endIdx].y);
   }
 
-  // Glowing trail — stores last N tracer positions
-  var trail=[];var TRAIL=40;
+  // ── Wave amplitude breathing — expands on inhale, contracts on exhale ──
+  // We compute a breathScale factor that the drawing uses for visual amp modulation.
+  // This doesn't move the ball, just makes the background wave pulse with the breath.
+  var breathScale = 1.0; // lerped toward target each frame
+  var breathScaleTarget = 1.0;
 
-  function drawWave(){
-    var N=80,pts=buildPts(N);
-    ctx.save();ctx.lineCap='round';ctx.lineJoin='round';
-    // halo
-    curve(pts,N);ctx.strokeStyle='rgba(140,200,255,.07)';ctx.lineWidth=30;ctx.stroke();
-    // guide
-    curve(pts,N);ctx.strokeStyle='rgba(160,215,255,.18)';ctx.lineWidth=6;ctx.stroke();
-    // lit trail
-    if(trail.length>1){
-      ctx.beginPath();ctx.moveTo(trail[0].x,trail[0].y);
-      for(var i=1;i<trail.length;i++){
-        var m={x:(trail[i-1].x+trail[i].x)/2,y:(trail[i-1].y+trail[i].y)/2};
-        ctx.quadraticCurveTo(trail[i-1].x,trail[i-1].y,m.x,m.y);
+  function drawWave() {
+    var N = 80, pts = buildPts(N);
+    // Modulate the displayed amplitude by breathScale for a living feel
+    // (we draw the actual pts, but add a scaled visual halo)
+    ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+
+    // Outer soft halo — breathes with scale
+    var haloW = 28 + breathScale * 8;
+    smoothPath(pts, N);
+    ctx.strokeStyle = 'rgba(140,200,255,' + (0.04 + breathScale * 0.04) + ')';
+    ctx.lineWidth = haloW; ctx.stroke();
+
+    // Guide line
+    smoothPath(pts, N);
+    ctx.strokeStyle = 'rgba(160,215,255,' + (0.14 + breathScale * 0.06) + ')';
+    ctx.lineWidth = 6 + breathScale * 2; ctx.stroke();
+
+    // Glowing trail behind ball
+    if (trail.length > 1) {
+      ctx.beginPath();
+      ctx.moveTo(trail[0].x, trail[0].y);
+      for (var i = 1; i < trail.length; i++) {
+        var mx = (trail[i-1].x + trail[i].x) / 2;
+        var my = (trail[i-1].y + trail[i].y) / 2;
+        ctx.quadraticCurveTo(trail[i-1].x, trail[i-1].y, mx, my);
       }
-      ctx.lineTo(trail[trail.length-1].x,trail[trail.length-1].y);
-      var g=ctx.createLinearGradient(trail[0].x,0,trail[trail.length-1].x,0);
-      g.addColorStop(0,'rgba(160,220,255,.10)');
-      g.addColorStop(1,'rgba(210,248,255,.88)');
-      ctx.strokeStyle=g;ctx.lineWidth=5;ctx.stroke();
+      ctx.lineTo(trail[trail.length-1].x, trail[trail.length-1].y);
+      var g = ctx.createLinearGradient(trail[0].x, 0, trail[trail.length-1].x, 0);
+      g.addColorStop(0, 'rgba(160,220,255,.06)');
+      g.addColorStop(0.6, 'rgba(190,235,255,.45)');
+      g.addColorStop(1, 'rgba(215,248,255,.92)');
+      ctx.strokeStyle = g; ctx.lineWidth = 4 + breathScale; ctx.stroke();
     }
     ctx.restore();
   }
 
-  function drawEndLabels(){
-    var s=ptAt(0),e=ptAt(1);
-    function chip(x,y,lbl){
-      ctx.save();ctx.font='500 10px "DM Sans",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
-      var tw=ctx.measureText(lbl).width,bw=tw+16,bh=20;
-      ctx.fillStyle='rgba(255,255,255,.07)';ctx.strokeStyle='rgba(180,215,255,.18)';ctx.lineWidth=1;
-      ctx.beginPath();ctx.roundRect(x-bw/2,y-bh/2,bw,bh,10);ctx.fill();ctx.stroke();
-      ctx.fillStyle='rgba(210,235,255,.44)';ctx.fillText(lbl,x,y+.5);ctx.restore();
+  function drawEndLabels() {
+    var s = ptAt(0), e = ptAt(1);
+    function chip(x, y, lbl) {
+      ctx.save();
+      ctx.font = '500 10px "DM Sans",sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      var tw = ctx.measureText(lbl).width, bw = tw + 16, bh = 20;
+      ctx.fillStyle = 'rgba(255,255,255,.07)';
+      ctx.strokeStyle = 'rgba(180,215,255,.16)';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.roundRect(x - bw/2, y - bh/2, bw, bh, 10);
+      ctx.fill(); ctx.stroke();
+      ctx.fillStyle = 'rgba(210,235,255,.40)';
+      ctx.fillText(lbl, x, y + 0.5);
+      ctx.restore();
     }
-    chip(s.x,s.y-24,'Start');chip(e.x,e.y-24,'Finish');
+    chip(s.x, s.y - 24, 'Start');
+    chip(e.x, e.y - 24, 'Finish');
   }
 
-  function drawTracer(){
-    if(progress<=0&&!playing)return;
-    var p=ptAt(progress),r=rising(progress),pulse=.5+.5*Math.sin(T*.0028);
+  function drawTracer() {
+    if (!playing && progress <= 0) return;
+    var p   = ptAt(progress);
+    var r   = isRising(progress);
+    var pulse = 0.5 + 0.5 * Math.sin(T * 0.0026);
+    var scale = breathScale;
+
     ctx.save();
-    // large outer glow
-    ctx.beginPath();ctx.arc(p.x,p.y,20+pulse*7,0,Math.PI*2);
-    ctx.fillStyle=r?'rgba(140,215,255,'+(0.05+pulse*.05)+')':'rgba(170,190,255,'+(0.05+pulse*.05)+')';
+    // Large breathing glow
+    ctx.beginPath(); ctx.arc(p.x, p.y, (18 + pulse * 7) * scale, 0, Math.PI * 2);
+    ctx.fillStyle = r
+      ? 'rgba(140,215,255,' + (0.04 + pulse * 0.06 * scale) + ')'
+      : 'rgba(170,190,255,' + (0.04 + pulse * 0.05 * scale) + ')';
     ctx.fill();
-    // mid ring
-    ctx.beginPath();ctx.arc(p.x,p.y,11,0,Math.PI*2);
-    ctx.fillStyle=r?'rgba(190,235,255,.22)':'rgba(185,205,255,.18)';ctx.fill();
-    // core
-    ctx.beginPath();ctx.arc(p.x,p.y,6,0,Math.PI*2);
-    ctx.fillStyle=r?'rgba(225,250,255,.98)':'rgba(208,218,255,.95)';ctx.fill();
+    // Mid glow
+    ctx.beginPath(); ctx.arc(p.x, p.y, 10 * scale, 0, Math.PI * 2);
+    ctx.fillStyle = r ? 'rgba(190,235,255,.20)' : 'rgba(185,205,255,.16)'; ctx.fill();
+    // Core
+    ctx.beginPath(); ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
+    ctx.fillStyle = r ? 'rgba(225,250,255,.98)' : 'rgba(208,218,255,.95)'; ctx.fill();
     ctx.restore();
   }
 
-  function updateUI(){
-    var r=rising(progress);
-    var label=r?'inhale':'exhale';
-    var col=r?'rgba(160,220,255,.88)':'rgba(175,200,255,.75)';
-    breathWord.textContent=label;breathWord.style.color=col;
-    breathWord2.textContent=label;breathWord2.style.color=col;
-    progFill.style.width=Math.round(progress*100)+'%';
+  // ── Breath word with cross-fade ──
+  var lastBreath = null;
+  function updateBreathWord(r) {
+    var label = r ? 'inhale' : 'exhale';
+    if (label === lastBreath) return;
+    lastBreath = label;
+    bWord.classList.remove('idle');
+    // Fade out, swap, fade in via opacity transition
+    bWord.style.opacity = '0';
+    setTimeout(function(){
+      bWord.textContent = label;
+      bWord.className = 'breath-word ' + (r ? '' : 'exhale');
+      bWord.style.opacity = '1';
+    }, 300);
   }
 
-  function update(dt){
-    if(!playing||completed)return;
-    elapsed+=dt;
-    progress=Math.min(1,elapsed/TOTAL_MS);
-    // update trail
-    var p=ptAt(progress);
-    trail.push({x:p.x,y:p.y});
-    if(trail.length>TRAIL)trail.shift();
-    updateUI();
-    if(progress>=1){
-      completed=true;
-      breathWord.textContent='✦';breathWord2.textContent='✦';
-      breathWord.style.color='rgba(200,235,255,.70)';breathWord2.style.color='rgba(200,235,255,.70)';
-      setTimeout(function(){finishEl.classList.add('show');},600);
+  function update(dt) {
+    if (!playing || completed) return;
+    elapsed += dt;
+    progress = Math.min(1, elapsed / TOTAL_MS);
+
+    var p = ptAt(progress);
+    trail.push({ x: p.x, y: p.y });
+    if (trail.length > TRAIL) trail.shift();
+
+    var r = isRising(progress);
+    // breathScale: expand gently on inhale, contract on exhale
+    breathScaleTarget = r ? 1.18 : 0.88;
+    breathScale += (breathScaleTarget - breathScale) * Math.min(1, dt * 0.003);
+
+    updateBreathWord(r);
+    pFill.style.width = Math.round(progress * 100) + '%';
+
+    if (progress >= 1) {
+      completed = true;
+      bWord.style.opacity = '0';
+      setTimeout(function(){
+        bWord.textContent = '✦';
+        bWord.className = 'breath-word';
+        bWord.style.color = 'rgba(200,235,255,.55)';
+        bWord.style.opacity = '0.6';
+      }, 400);
+      // Very slow finish reveal — 1.5s delay then 2.8s CSS transition
+      setTimeout(function(){ finishEl.classList.add('show'); }, 1500);
     }
   }
 
-  var lastT=performance.now();
-  function loop(now){
-    var dt=Math.min(32,now-lastT);lastT=now;T=now;
+  var lastT = performance.now();
+  function loop(now) {
+    var dt = Math.min(32, now - lastT); lastT = now; T = now;
     update(dt);
-    ctx.clearRect(0,0,W,H);
-    drawWave();drawEndLabels();drawTracer();
+    ctx.clearRect(0, 0, W, H);
+    drawWave(); drawEndLabels(); drawTracer();
     requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
 
-  playBtn.addEventListener('click',function(){
-    if(playing)return;
-    playing=true;
-    playOverlay.classList.add('hidden');
+  playBtn.addEventListener('click', function(){
+    if (playing) return;
+    playing = true;
+    playOvr.classList.add('hidden');
+    // Immediately show first breath state
+    bWord.style.opacity = '0';
+    setTimeout(function(){
+      bWord.textContent = 'inhale';
+      bWord.className = 'breath-word';
+      bWord.style.opacity = '1';
+      lastBreath = 'inhale';
+    }, 200);
   });
 })();
 </script>
 
+<!-- ═══ WALL SCRIPT ═══ -->
 <script>
 (function(){
-  var POLL_ID='risefor65-focus-wall-v1';
-  var API_URL='/api/focus-wall?poll='+encodeURIComponent(POLL_ID);
-  var LIKED_KEY=POLL_ID+'-liked';
-  var inputEl=document.getElementById('entryInput'),submitBtn=document.getElementById('submitBtn');
-  var entriesEl=document.getElementById('entries'),countEl=document.getElementById('countText');
-  var statusEl=document.getElementById('wallStatus');
-  var entries=[],likedMap=JSON.parse(localStorage.getItem(LIKED_KEY)||'{}'),busy=false;
-  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-  function ago(ts){if(!ts)return'just now';var d=Date.now()-ts,m=Math.floor(d/60000);if(m<1)return'just now';if(m<60)return m+'m ago';var h=Math.floor(m/60);if(h<24)return h+'h ago';return Math.floor(h/24)+'d ago';}
+  var POLL_ID   = 'risefor65-focus-wall-v1';
+  var API_URL   = '/api/focus-wall?poll=' + encodeURIComponent(POLL_ID);
+  var LIKED_KEY = POLL_ID + '-liked';
+  var inputEl   = document.getElementById('entryInput');
+  var submitBtn = document.getElementById('submitBtn');
+  var entriesEl = document.getElementById('entries');
+  var countEl   = document.getElementById('countText');
+  var statusEl  = document.getElementById('wallStatus');
+  var entries   = [], likedMap = JSON.parse(localStorage.getItem(LIKED_KEY)||'{}'), busy = false;
+
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function ago(ts){
+    if(!ts) return 'just now';
+    var d=Date.now()-ts, m=Math.floor(d/60000);
+    if(m<1) return 'just now'; if(m<60) return m+'m ago';
+    var h=Math.floor(m/60); if(h<24) return h+'h ago';
+    return Math.floor(h/24)+'d ago';
+  }
+
   function render(){
-    var u=entries.length,r=entries.reduce(function(s,e){return s+Number(e.count||0);},0);
-    countEl.textContent=r+' '+(r===1?'response':'responses')+' · '+u+' unique';
-    if(!entries.length){entriesEl.innerHTML='<div class="empty-state">Be the first to share what you\'ll give your full attention to.</div>';return;}
-    var sorted=entries.slice().sort(function(a,b){return(Number(b.count||0)-Number(a.count||0))||((b.updatedAt||0)-(a.updatedAt||0));});
+    var u=entries.length, r=entries.reduce(function(s,e){return s+Number(e.count||0);},0);
+    countEl.textContent = r+' '+(r===1?'response':'responses')+' · '+u+' unique';
+    if(!entries.length){
+      entriesEl.innerHTML='<div class="empty-state">Be the first to share what you\'ll give your full attention to.</div>';
+      return;
+    }
+    var sorted=entries.slice().sort(function(a,b){
+      return (Number(b.count||0)-Number(a.count||0))||((b.updatedAt||0)-(a.updatedAt||0));
+    });
     entriesEl.innerHTML=sorted.map(function(e){
       var l=!!likedMap[e.id];
-      return'<div class="entry"><div class="entry-body"><div class="entry-prefix">Unitasking on</div><div class="entry-text">'+esc(e.text||'')+'</div><div class="entry-meta">'+(e.count||0)+' '+(Number(e.count)===1?'person':'people')+' · '+ago(e.updatedAt||e.createdAt)+'</div></div><button type="button" class="like-btn'+(l?' liked':'')+'" data-id="'+e.id+'"'+(l?' disabled':'')+'>+1</button></div>';
+      return '<div class="entry"><div class="entry-body">'
+        +'<div class="entry-prefix">Unitasking on</div>'
+        +'<div class="entry-text">'+esc(e.text||'')+'</div>'
+        +'<div class="entry-meta">'+(e.count||0)+' '+(Number(e.count)===1?'person':'people')+' · '+ago(e.updatedAt||e.createdAt)+'</div>'
+        +'</div><button type="button" class="like-btn'+(l?' liked':'')+'" data-id="'+e.id+'"'+(l?' disabled':'')+'>+1</button></div>';
     }).join('');
-    entriesEl.querySelectorAll('.like-btn').forEach(function(btn){btn.addEventListener('click',function(){plusOne(btn.dataset.id);});});
+    entriesEl.querySelectorAll('.like-btn').forEach(function(btn){
+      btn.addEventListener('click',function(){plusOne(btn.dataset.id);});
+    });
   }
+
   function load(show){
-    if(show)countEl.textContent='Loading…';
-    fetch(API_URL,{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(d){entries=Array.isArray(d.entries)?d.entries:[];render();}).catch(function(e){console.error(e);if(show)countEl.textContent='Could not load — try refreshing';});
+    if(show) countEl.textContent='Loading…';
+    fetch(API_URL,{cache:'no-store'})
+      .then(function(r){if(!r.ok) throw new Error('HTTP '+r.status); return r.json();})
+      .then(function(d){entries=Array.isArray(d.entries)?d.entries:[];render();})
+      .catch(function(e){console.error(e); if(show) countEl.textContent='Could not load — try refreshing';});
   }
+
   function submit(){
-    var text=inputEl.value.trim();if(!text||busy)return;
-    busy=true;submitBtn.disabled=true;statusEl.textContent='Posting…';
-    fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'add',text:text})}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(d){entries=Array.isArray(d.entries)?d.entries:[];inputEl.value='';statusEl.textContent='Posted ✓';render();setTimeout(function(){if(statusEl.textContent==='Posted ✓')statusEl.textContent='';},2000);}).catch(function(e){console.error(e);statusEl.textContent='Could not post — try again.';}).finally(function(){busy=false;submitBtn.disabled=false;});
+    var text=inputEl.value.trim(); if(!text||busy) return;
+    busy=true; submitBtn.disabled=true; statusEl.textContent='Posting…';
+    fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'add',text:text})})
+      .then(function(r){if(!r.ok) throw new Error('HTTP '+r.status); return r.json();})
+      .then(function(d){
+        entries=Array.isArray(d.entries)?d.entries:[];
+        inputEl.value=''; statusEl.textContent='Posted ✓'; render();
+        setTimeout(function(){if(statusEl.textContent==='Posted ✓') statusEl.textContent='';},2000);
+      })
+      .catch(function(e){console.error(e); statusEl.textContent='Could not post — try again.';})
+      .finally(function(){busy=false; submitBtn.disabled=false;});
   }
+
   function plusOne(id){
-    if(likedMap[id]||busy)return;
-    likedMap[id]=true;localStorage.setItem(LIKED_KEY,JSON.stringify(likedMap));render();
-    fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'like',id:id})}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(d){entries=Array.isArray(d.entries)?d.entries:entries;render();}).catch(function(e){console.error(e);delete likedMap[id];localStorage.setItem(LIKED_KEY,JSON.stringify(likedMap));render();});
+    if(likedMap[id]||busy) return;
+    likedMap[id]=true; localStorage.setItem(LIKED_KEY,JSON.stringify(likedMap)); render();
+    fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'like',id:id})})
+      .then(function(r){if(!r.ok) throw new Error('HTTP '+r.status); return r.json();})
+      .then(function(d){entries=Array.isArray(d.entries)?d.entries:entries; render();})
+      .catch(function(e){console.error(e); delete likedMap[id]; localStorage.setItem(LIKED_KEY,JSON.stringify(likedMap)); render();});
   }
+
   submitBtn.addEventListener('click',submit);
-  inputEl.addEventListener('keydown',function(e){if(e.key==='Enter')submit();});
-  load(true);setInterval(function(){load(false);},10000);
+  inputEl.addEventListener('keydown',function(e){if(e.key==='Enter') submit();});
+  load(true);
+  setInterval(function(){load(false);},10000);
 })();
 </script>
 </body>
